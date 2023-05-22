@@ -1,0 +1,99 @@
+{% extends "authentication.html" %}
+
+
+{% block meta %}
+<title>Register</title>
+
+{% endblock meta %}
+
+{% block content %}
+
+<!-- Form Register-->
+<section style="background-color: lightblue;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+  
+              <h3 class="mb-5">U League - 2</h3>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typeEmailX-2">Username</label>
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typePasswordX-2">Password</label>
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typeEmailX-2">Nama Depan</label>
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typePasswordX-2">Nama Belakang</label>
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typeEmailX-2">Nomor HP</label>
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typePasswordX-2">Email</label>
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="typePasswordX-2">Alamat</label>
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+              </div>
+
+              <fieldset>
+                <legend>Status:</legend>
+            
+                <div>
+                  <input type="radio" id="mahasiswa" name="drone" value="mahasiswa"
+                         checked>
+                  <label for="mahasiswa">Mahasiswa</label>
+                </div>
+            
+                <div>
+                  <input type="radio" id="dosen" name="drone" value="dosen">
+                  <label for="dosen">Dosen</label>
+                </div>
+            
+                <div>
+                  <input type="radio" id="tendik" name="drone" value="tendik">
+                  <label for="tendik">Tendik</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="alumni" name="drone" value="alumni">
+                    <label for="alumni">Alumni</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="umum" name="drone" value="umum">
+                    <label for="umum">Umum</label>
+                </div>
+            </fieldset>
+  
+              <hr class="my-4">
+
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary" type="button">Register</button>
+            </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock content %}
