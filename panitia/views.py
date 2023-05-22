@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def dashboard_panitia(request):
+    return render(request, 'dashboard_panitia.html')
+
