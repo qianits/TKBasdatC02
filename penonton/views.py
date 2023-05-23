@@ -25,23 +25,50 @@ def dashboard_penonton(request):
     alamat = informasi[0][5]
 
     if info_pertandingan != None:
-        tim_bertanding = get_tim_bertanding(cursor, info_pertandingan[0][0]) 
-        tim_1 = tim_bertanding[0][0]
-        tim_2 = tim_bertanding[1][0]
-        tim_bertanding = tim_1 + " vs " + tim_2
+        # tim_bertanding = get_tim_bertanding(cursor, info_pertandingan[0][0]) 
+        # tim_1 = tim_bertanding[0][0]
+        # tim_2 = tim_bertanding[1][0]
+        # tim_bertanding = tim_1 + " vs " + tim_2
 
-        nama_stadion = get_nama_stadion(cursor, info_pertandingan[0][3])
-        nama_stadion = nama_stadion[0][0]
+        # nama_stadion = get_nama_stadion(cursor, info_pertandingan[0][3])
+        # nama_stadion = nama_stadion[0][0]
 
-        start_time = info_pertandingan[0][1]
-        end_time = info_pertandingan[0][2]
+        # start_time = info_pertandingan[0][1]
+        # end_time = info_pertandingan[0][2]
+
+        list_of_id_pertandingan = [x[0] for x in info_pertandingan]
+        list_of_id_stadium = [x[3] for x in info_pertandingan]
+        
+        list_of_tim_pertandingan = [] # ['UIFC vs IPB Warriors', 'a vs b']
+        for id in list_of_id_pertandingan:
+            temp = get_tim_bertanding(cursor,id)
+            temp2 = [item[0] for item in temp]
+            temp3 = " vs ".join(temp2) 
+            list_of_tim_pertandingan.append(temp3)
+        
+        list_of_nama_stadion = []
+        for id in list_of_id_stadium:
+            temp = get_nama_stadion(cursor,id)
+            temp2 = [item[0] for item in temp]
+            list_of_nama_stadion.append(temp2)
+        
+        list_start_date = [x[1] for x in info_pertandingan]
+        list_end_date = [x[2] for x in info_pertandingan]
+
+        # ubah ke tupple dulu
+        tup1 = [(item,) for item in list_of_tim_pertandingan]
+        tup3 = [(item,) for item in list_start_date]
+        tup4 = [(item,) for item in list_end_date]
+
+        data = list(zip(tup1, list_of_nama_stadion, tup3, tup4))
+
 
         db_connection.commit()
         db_connection.close()
         
 
-        return render(request, 'dashboard_penonton.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'tim_bertanding':tim_bertanding,
-                                                        'stadium':nama_stadion, 'start':start_time, 'end':end_time})
+        return render(request, 'dashboard_penonton.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 
+                                                           'data':data})
 
     else:
         db_connection.commit()
@@ -94,7 +121,6 @@ def get_pertandingan(cursor, id: str):
     cursor.execute(query_get_data_pertandingan,(id_pertandingan))
     data = cursor.fetchall()
 
-    print(data)
 
     return data
 
