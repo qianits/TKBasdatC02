@@ -29,8 +29,8 @@
                 style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
                 <img src="https://storage.needpix.com/rsynced_images/manager-312603_1280.png"
                   alt="Avatar" class="img-fluid my-5" style="width: 100px;" />
-                <h5>Johannes Budiman</h5>
-                <p>Panitia</p>
+                <h5>{{nama}}</h5>
+                <p>{{status}}</p>
                 <i class="far fa-edit mb-5"></i>
               </div>
               <div class="col-md-8">
@@ -40,27 +40,27 @@
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Email</h6>
-                      <p class="text-muted">J.Budiman@gmail.com</p>
+                      <p class="text-muted">{{email}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Nomor HP</h6>
-                      <p class="text-muted">081286872394</p>
+                      <p class="text-muted">{{no_hp}}</p>
                     </div>
                   </div>
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Alamat</h6>
-                      <p class="text-muted">Jl. Kenangan no 99, Blok M, Jakarta Selatan, 15331</p>
+                      <p class="text-muted">{{alamat}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Status</h6>
-                      <p class="text-muted">Dosen</p>
+                      <p class="text-muted">{{status}}</p>
                     </div>
                   </div>
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Jabatan</h6>
-                      <p class="text-muted">Ketua Pelaksana</p>
+                      <p class="text-muted">{{jabatan}}</p>
                     </div>
                   </div>
                 </div>
@@ -82,32 +82,24 @@
 
 
   <div class="container" >
+    {% for item in data %}
     <div class="row g-3" >
         <div class="col-12 col-md-6 col-lg-4" >
             <div class="card" style="background-color: #f4f5f7;">
                 <div class="card-body">
-                    <p class="card-text"><b>ID_Pertandingan: </b> e2ecd3d0-9616-4875-b226-7ca7bb9be05b</p>
-                    <p class="card-text"><b>Datetime: </b> 5 May 2023, 09:00 WIB</p>
-                    <p class="card-text"><b>Manajer Tim A: </b> Ied Mubarok</p>
-                    <p class="card-text"><b>Manajer Tim B: </b> Ayyubie</p>
-                    <p class="card-text"><b>Isi Rapat: </b> Technical Meeting Tim UGM FC vs Arsenal</p>
+                    <p class="card-text"><b>ID_Pertandingan: </b> {{item.0.0}}</p>
+                    <p class="card-text"><b>Datetime: </b> {{ item.1.0}}</p>
+                    <p class="card-text"><b>Manajer {{item.2.0}}: </b> {{item.2.1}}</p>
+                    <p class="card-text"><b>Manajer {{item.3.0}}: </b> {{item.3.1}}</p>
+                    <p class="card-text"><b>Isi Rapat: </b> {{item.4.0}}</p>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card" style="background-color: #f4f5f7;">
-                <div class="card-body">
-                    <p class="card-text"><b>ID_Pertandingan: </b> 7e4b0225-2477-4321-a5e5-60b9239c9060</p>
-                    <p class="card-text"><b>Datetime: </b> 7 May 2023, 09:00 WIB</p>
-                    <p class="card-text"><b>Manajer Tim A: </b> Sultan Salahudine</p>
-                    <p class="card-text"><b>Manajer Tim B: </b> El Ayyubie</p>
-                    <p class="card-text"><b>Isi Rapat: </b> Pengunduran Jadwal IED FC vs MUBAROK</p>
-                </div>
-            </div>
-        </div>
-
     </div>
+    {% endfor %}
 </div>
+
+
 <ul></ul>
 
 </body>

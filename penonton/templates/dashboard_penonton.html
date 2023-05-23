@@ -29,7 +29,7 @@
                 style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
                 <img src="https://storage.needpix.com/rsynced_images/manager-312603_1280.png"
                   alt="Avatar" class="img-fluid my-5" style="width: 100px;" />
-                <h5>MUBAROK ELAYYU</h5>
+                <h5>{{ nama }}</h5>
                 <p>Penonton</p>
                 <i class="far fa-edit mb-5"></i>
               </div>
@@ -40,21 +40,21 @@
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Email</h6>
-                      <p class="text-muted">IM.mubarok@gmail.com</p>
+                      <p class="text-muted">{{email}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Nomor HP</h6>
-                      <p class="text-muted">08126475664</p>
+                      <p class="text-muted">{{no_hp}}</p>
                     </div>
                   </div>
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Alamat</h6>
-                      <p class="text-muted">Jl. Kenangan no 99, Blok M, Jakarta Selatan, 15331</p>
+                      <p class="text-muted">{{alamat}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Status</h6>
-                      <p class="text-muted">Mahasiswa</p>
+                      <p class="text-muted">{{status}}</p>
                     </div>
                   </div>
                 </div>
@@ -74,32 +74,22 @@
   
   <ul></ul>
 
-
+  {% if tim_bertanding %}
   <div class="container">
     <div class="row g-3">
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card" style="background-color: #f4f5f7;">
                 <div class="card-body">
-                    <p class="card-text"><b>Tim Bertanding: </b> Tim A vs Tim B</p>
-                    <p class="card-text"><b>Stadium: </b> Stadion IPB</p>
-                    <p class="card-text"><b>Start Datetime: </b> 5 May 2023, 09:00 WIB</p>
-                    <p class="card-text"><b>End Datetime: </b> 5 May 2023, 11:00 WIB</p>
+                    <p class="card-text"><b>Tim Bertanding: </b> {{tim_bertanding}}</p>
+                    <p class="card-text"><b>Stadium: </b> {{stadium}}</p>
+                    <p class="card-text"><b>Start Datetime: </b> {{start}}</p>
+                    <p class="card-text"><b>End Datetime: </b> {{end}}</p>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card" style="background-color: #f4f5f7;">
-                <div class="card-body">
-                    <p class="card-text"><b>Tim Bertanding: </b> Tim C vs Tim D</p>
-                    <p class="card-text"><b>Stadium: </b> Stadion Universitas indonesia</p>
-                    <p class="card-text"><b>Start Datetime: </b> 6 May 2023, 09:00 WIB</p>
-                    <p class="card-text"><b>End Datetime: </b> 6 May 2023, 11:00 WIB</p>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
+{% endif %}
 <ul></ul>
 
   

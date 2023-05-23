@@ -19,20 +19,22 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="form-outline mb-4">
-                <label class="form-label" for="typeEmailX-2">Username</label>
-                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
-            </div>
+          <form method="post" action="{% url 'authentication:login' %}">
+              <div class="form-outline mb-4">
+                  <label class="form-label" for="typeEmailX-2">Username</label>
+                  <input type="text" id="typeEmailX-2" class="form-control form-control-lg" name="username" />
+              </div>
 
-            <div class="form-outline mb-4">
-                <label class="form-label" for="typePasswordX-2">Password</label>
-                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
+              <div class="form-outline mb-4">
+                  <label class="form-label" for="typePasswordX-2">Password</label>
+                  <input type="password" id="typePasswordX-2" class="form-control form-control-lg" name="password"/>
+              </div>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Login</button>
-        </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
       </div>
     </div>
   </div>
