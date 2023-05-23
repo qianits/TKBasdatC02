@@ -24,13 +24,13 @@
   <h1 class="text-center mb-4">🧾 Pembelian Tiket</h1>
   <div class="container container-shadow p-5">
 <!-- start form -->
-<form method="post" action="{% url 'penonton:list_waktu_stadium' %}">
+<form method="POST" action="">
   {% csrf_token %}
   <div class="form-group" style="margin-bottom: 20px;">
     <label for="dropdown">Pilih Stadium:</label>
-    <select class="form-control" id="dropdown" name="stadium">
+    <select class="form-control" id="dropdown" name="nama_stadium">
         {% for stadium in stadiums %}
-        <option value="{{ stadium.0 }}">{{ stadium.1 }}</option>
+        <option value="{{ stadium.1 }}">{{ stadium.1 }}</option>
         {% endfor %}
     </select>
   </div>
@@ -46,25 +46,7 @@
   </div>
 </div>
 
-<!-- <div class="container mt-5">
-  <h2 class="text-center mb-4">📃 List Waktu Stadium GBK</h2>
-  <div class="container container-shadow p-5">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>List Waktu</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>07.00 - 09.00</td>
-          <td><button type="button" class="btn btn-outline-primary">Next</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<!---
 
 <div class="container mt-5">
   <h2 class="text-center mb-4">⚽️ List Pertandingan</h2>

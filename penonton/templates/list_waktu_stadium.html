@@ -1,0 +1,48 @@
+{% extends 'base_penonton.html' %}
+{% load static %}
+
+{% block meta %}
+<title>List Waktu Stadium</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+<style>
+  /* Add styles for the container with shadow and blur */
+  .container-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">📃 List Waktu {{nama_stadium}} </h2>
+  <div class="container container-shadow p-5">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>List Waktu</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in waktu %}
+        <tr>
+          <td>{{i.0}} - {{i.1}}</td>
+          <td><button type="button" class="btn btn-outline-primary">Next</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}

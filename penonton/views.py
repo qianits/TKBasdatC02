@@ -3,8 +3,13 @@ from django.contrib import messages
 import psycopg2
 import locale
 import uuid
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.urls import reverse
 locale.setlocale(locale.LC_ALL, '')
 from django.http import JsonResponse
+from penonton.models import *
+
+# TODO: Handle error kalau tidak ada jadwal pertandingan pada hari itu
 
 def dashboard_penonton(request):
     return render(request, 'dashboard_penonton.html')
@@ -24,14 +29,41 @@ def pilih_stadium(request):
     stadiums = cursor.fetchall()
     context['stadiums'] = stadiums
     db_connection.close()
-    if request.method == 'POST':
-        id_stadium = request.POST.get('stadium')
+    if (request.method == 'POST'):
+        nama_stadium = request.POST.get('nama_stadium')
         selected_date = request.POST.get('date')
-        # TODO: something with the stadium ID and selected date
-        return render(request, 'list_waktu_stadium.html', {'id_stadium': id_stadium, 'selected_date': selected_date})
+        StadiumTemp.objects.create(nama_stadium=nama_stadium, tanggal=selected_date)
+        return HttpResponseRedirect(reverse("penonton:list_waktu_stadium")) 
     return render(request, 'pembelian_tiket.html', context=context)
 
-def list_waktu_stadium(id_stadium, request):
+def get_waktu_stadium(nama_stadium, selected_date, cursor):
+    query_get_waktu = """SELECT TO_CHAR(start_datetime, 'HH:MI') as start, TO_CHAR(end_datetime, 'HH:MI') as end
+    FROM pertandingan
+    JOIN stadium ON stadium.id_stadium = pertandingan.stadium
+    WHERE stadium.nama = %s 
+    AND TO_CHAR(start_datetime, 'YYYY-MM-DD') LIKE %s
+    """
+    list_waktu = cursor.execute(query_get_waktu, (nama_stadium, selected_date))
+    list_waktu = cursor.fetchall()
+    print(list_waktu)
+    return list_waktu
+
+def list_waktu_stadium(request):
+    stadium_temps = StadiumTemp.objects.all()
+    tanggal_list = [stadium_temp.tanggal for stadium_temp in stadium_temps]
+    stadium_list = [stadium_temp.nama_stadium for stadium_temp in stadium_temps]
+
+    if len(tanggal_list) > 0:
+        selected_date = tanggal_list[-1]
+    else:
+        selected_date = None  # Atau nilai default yang sesuai
+
+    if len(stadium_list) > 0:
+        nama_stadium = stadium_list[-1]
+    else:
+        nama_stadium = None  # Atau nilai default yang sesuai
+
+    context={}
     db_connection = psycopg2.connect(
         host="localhost",
         database="postgres",
@@ -39,20 +71,9 @@ def list_waktu_stadium(id_stadium, request):
         password="Qistina04"
     )
     cursor = db_connection.cursor()
-
-    id_stadium = request.GET.get('id_stadium')
-    selected_date = request.GET.get('selected_date')
-    return render(request, 'list_waktu_stadium.html')
-
-def get_waktu_stadium(id_stadium,  cursor):
-    # TODO : Selected date
-    query_get_waktu = """ SELECT start_datetime, end_datetime
-    FROM pertandingan
-    JOIN stadium ON stadium.id_stadium = pertandingan.stadium
-    WHERE id_stadium = %s
-    """
-    list_waktu = cursor.execute(query_get_waktu, (id_stadium,))
-    list_waktu = cursor.fetchall()
-    return list_waktu
-
-
+    cursor.execute("set search_path to uleague")
+    list_waktu_stadium = get_waktu_stadium(nama_stadium, selected_date, cursor)
+    context = {"waktu" : list_waktu_stadium,
+                "nama_stadium" : nama_stadium}
+    db_connection.close()
+    return render(request, 'list_waktu_stadium.html', context=context)
