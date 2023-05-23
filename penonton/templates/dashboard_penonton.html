@@ -74,22 +74,22 @@
   
   <ul></ul>
 
-  {% if tim_bertanding %}
   <div class="container">
+    {% for item in data %}
     <div class="row g-3">
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card" style="background-color: #f4f5f7;">
                 <div class="card-body">
-                    <p class="card-text"><b>Tim Bertanding: </b> {{tim_bertanding}}</p>
-                    <p class="card-text"><b>Stadium: </b> {{stadium}}</p>
-                    <p class="card-text"><b>Start Datetime: </b> {{start}}</p>
-                    <p class="card-text"><b>End Datetime: </b> {{end}}</p>
+                    <p class="card-text"><b>Tim Bertanding: </b> {{item.0.0}}</p>
+                    <p class="card-text"><b>Stadium: </b> {{item.1.0}}</p>
+                    <p class="card-text"><b>Start Datetime: </b> {{item.2.0}}</p>
+                    <p class="card-text"><b>End Datetime: </b> {{item.3.0}}</p>
                 </div>
             </div>
         </div>
     </div>
+    {% endfor %}
 </div>
-{% endif %}
 <ul></ul>
 
   
