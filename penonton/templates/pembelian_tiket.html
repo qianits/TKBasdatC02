@@ -1,0 +1,130 @@
+{% extends 'base_penonton.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Pembelian Tiket</title>
+{% endblock meta %}
+
+{% block content %}
+<style>
+  /* Add styles for the container with shadow and blur */
+  .container-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+</style>
+</head>
+<body style="margin-bottom: 100px;">
+<div class="container mt-5">
+  <h1 class="text-center mb-4">🧾 Pembelian Tiket</h1>
+  <div class="container container-shadow p-5">
+    <form>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="dropdown">Pilih Stadium:</label>
+        <select class="form-control" id="dropdown">
+          <option>Stadium GBK</option>
+          <option>Stadium UI</option>
+          <option>Stadium JIS</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="calendar">Enter a date:</label>
+        <input type="date" class="form-control" id="calendar">
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Next</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">📃 List Waktu Stadium GBK</h2>
+  <div class="container container-shadow p-5">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>List Waktu</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>07.00 - 09.00</td>
+          <td><button type="button" class="btn btn-outline-primary">Next</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">⚽️ List Pertandingan</h2>
+  <div class="container container-shadow p-5">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Tim 1</th>
+          <th>Tim 2</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A</td>
+          <td>B</td>
+          <td><a href="#">Pilih</a></td>
+        </tr>
+        <tr>
+          <td>C</td>
+          <td>D</td>
+          <td><a href="#">Pilih</a></td>
+        </tr>
+        <tr>
+          <td>E</td>
+          <td>F</td>
+          <td><a href="#">Pilih</a></td>
+        </tr>
+        <tr>
+          <td>F</td>
+          <td>G</td>
+          <td><a href="#">Pilih</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4"> 💵 Beli Tiket</h1>
+  <div class="container container-shadow p-5">
+    <form>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="dropdown">Jenis tiket:</label>
+        <select class="form-control" id="dropdown">
+          <option>VIP</option>
+          <option>Main East</option>
+          <option>Kategori 1</option>
+          <option>Kategori 2</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="calendar">Pembayaran:</label>
+        <select class="form-control" id="dropdown">
+          <option>E-wallet</option>
+          <option>Transfer Bank</option>
+        </select>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Beli</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}
