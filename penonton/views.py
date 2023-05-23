@@ -3,7 +3,8 @@ import psycopg2
 
 def dashboard_penonton(request):
     username = request.session.get('username')
-
+    
+    # Ini sesuain sama local postgresql lu
     db_connection = psycopg2.connect(
             host="localhost",
             database="postgres",
@@ -141,3 +142,6 @@ def get_nama_stadion(cursor, id: str):
     nama_stadium = cursor.fetchall()
     
     return nama_stadium
+
+def pembelian_tiket(request):
+    return render(request, 'pembelian_tiket.html')
