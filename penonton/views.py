@@ -37,7 +37,7 @@ def pilih_stadium(request):
     return render(request, 'pembelian_tiket.html', context=context)
 
 def get_waktu_stadium(nama_stadium, selected_date, cursor):
-    query_get_waktu = """SELECT TO_CHAR(start_datetime, 'HH:MI') as start, TO_CHAR(end_datetime, 'HH:MI') as end
+    query_get_waktu = """SELECT TO_CHAR(start_datetime, 'HH:MI') as start, TO_CHAR(end_datetime, 'HH:MI') as end, id_pertandingan
     FROM pertandingan
     JOIN stadium ON stadium.id_stadium = pertandingan.stadium
     WHERE stadium.nama = %s 
@@ -45,7 +45,6 @@ def get_waktu_stadium(nama_stadium, selected_date, cursor):
     """
     list_waktu = cursor.execute(query_get_waktu, (nama_stadium, selected_date))
     list_waktu = cursor.fetchall()
-    print(list_waktu)
     return list_waktu
 
 def list_waktu_stadium(request):
@@ -76,4 +75,32 @@ def list_waktu_stadium(request):
     context = {"waktu" : list_waktu_stadium,
                 "nama_stadium" : nama_stadium}
     db_connection.close()
+    if (request.method == 'POST'):
+        id_pertandingan = request.POST.get('id_pertandingan')
+        PertandinganTemp.objects.create(id_pertandingan=id_pertandingan)
+        return HttpResponseRedirect(reverse("penonton:list_pertandingan")) 
+
     return render(request, 'list_waktu_stadium.html', context=context)
+
+def list_pertandingan(request):
+    pertandingan_temps = PertandinganTemp.objects.all()
+    pertandingan_list = [pt_temp.id_pertandingan for pt_temp in pertandingan_temps]
+
+    if len(pertandingan_list) > 0:
+        selected_pertandingan = pertandingan_list[-1]
+    else:
+        selected_pertandingan = None  # Atau nilai default yang sesuai
+
+    context={}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="qistina",
+        password="Qistina04"
+    )
+
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    list_waktu_stadium = get_waktu_stadium(nama_stadium, selected_date, cursor)
+
+    return

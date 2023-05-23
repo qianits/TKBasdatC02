@@ -30,11 +30,11 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody name="id_pertandingan">
         {% for i in waktu %}
         <tr>
           <td>{{i.0}} - {{i.1}}</td>
-          <td><button type="button" class="btn btn-outline-primary">Next</button></td>
+          <td><button value="{{ i.2 }}" type="button" class="btn btn-outline-primary">Next</button></td>
         </tr>
         {% endfor %}
       </tbody>
