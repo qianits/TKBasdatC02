@@ -1,8 +1,130 @@
 from django.shortcuts import render
+import psycopg2
+
 
 
 def dashboard_panitia(request):
-    return render(request, 'dashboard_panitia.html')
+    username = request.session.get('username')
 
-def panitia_memulai_pertandingan(request):
-    return render(request, "mulai_pertandingan.html")
+    db_connection = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            password="123"
+        )
+
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to ULeague")
+
+    # Untuk Informasi
+    informasi = get_informasi(cursor, username) 
+    status = get_status(cursor,informasi[0][0])   
+    info_rapat = get_rapat(cursor,[informasi[0][0]])
+    jabatan = get_jabatan(cursor, informasi[0][0])
+
+    nama = informasi[0][1] + " " + informasi[0][2]
+    email = informasi[0][4]
+    no_hp = informasi[0][3]
+    alamat = informasi[0][5]
+    
+
+    if info_rapat != None:
+        list_of_id_pertandingan = [x[0] for x in info_rapat]
+        list_of_datetime = [x[1] for x in info_rapat]
+        list_of_isi_rapat = [x[5] for x in info_rapat]
+    
+
+        temps_tim_1 = [x[3] for x in info_rapat]
+        list_of_tim_manajer_1 = []
+        for id in temps_tim_1:
+            temp = get_list_of_tim_manajer(cursor,id)
+            list_of_tim_manajer_1.append(temp)
+
+        temps_tim_2 = [x[4] for x in info_rapat]
+        list_of_tim_manajer_2 = []
+        for id in temps_tim_2:
+            temp = get_list_of_tim_manajer(cursor,id)
+            list_of_tim_manajer_2.append(temp)
+    
+        db_connection.commit()
+        db_connection.close()
+
+        tup1 = [(item,) for item in list_of_id_pertandingan]
+        tup2 = [(item,) for item in list_of_datetime]
+        tup3 = [(item,) for item in list_of_isi_rapat]
+
+        data = list(zip(tup1, tup2, list_of_tim_manajer_1, list_of_tim_manajer_2, tup3))
+
+        return render(request, 'dashboard_panitia.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'jabatan':jabatan
+                                                         , 'list_of_id_pertandingan':list_of_id_pertandingan, 'data':data})
+
+    else:
+        db_connection.commit()
+        db_connection.close()
+        return render(request, 'dashboard_panitia.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'jabatan':jabatan})
+
+
+# Untuk mencari seluruh informasi user
+def get_informasi(cursor, username: str):
+
+    # Mencari ID
+    query_get_ID = """select ID_panitia from PANITIA 
+    where username = %s
+    """
+    cursor.execute(query_get_ID,(username,))
+    ID = cursor.fetchall()
+    ID = ID[0][0]
+    
+    # Mencari data berdasarkan ID
+    query_get_data = """select * from NON_PEMAIN 
+    where ID = %s
+    """
+    cursor.execute(query_get_data,(ID,))
+    result = cursor.fetchall()
+    
+    return result
+
+def get_status(cursor, id: str):
+    query_get_status = """select status from STATUS_NON_PEMAIN 
+    where ID_Non_Pemain = %s
+    """
+    cursor.execute(query_get_status,(id,))
+    results = cursor.fetchall()
+    return results[0][0]
+
+def get_jabatan(cursor, id: str):
+    query_get_jabatan = """select jabatan from PANITIA 
+    where ID_Panitia = %s
+    """
+    cursor.execute(query_get_jabatan,(id,))
+    results = cursor.fetchall()
+    return results[0][0]
+
+def get_rapat(cursor, id: str):
+    query_get_data_rapat = """select * from RAPAT 
+    where PERWAKILAN_PANITIA = %s
+    """
+    cursor.execute(query_get_data_rapat,(id[0],))
+    data_rapat = cursor.fetchall()
+
+    if len(data_rapat) == 0:
+        return None
+    
+    return data_rapat
+
+def get_list_of_tim_manajer(cursor, id: str):
+    query_get_tim = """select Nama_Tim from TIM_MANAJER 
+    where ID_Manajer = %s
+    """
+    cursor.execute(query_get_tim,(id,))
+    tim = cursor.fetchall()
+
+    query_get_manajer = """select Nama_Depan || ' ' || Nama_Belakang AS Nama_Lengkap from NON_PEMAIN 
+    where ID = %s
+    """
+    cursor.execute(query_get_manajer,(id,))
+    nama_manajer = cursor.fetchall()
+
+    tim_manajer = (tim[0][0], nama_manajer[0][0])
+    
+    return tim_manajer
