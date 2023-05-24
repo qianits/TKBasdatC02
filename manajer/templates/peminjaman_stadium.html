@@ -1,0 +1,84 @@
+{% extends 'base_manajer.html' %}
+{% load static %}
+
+{% block content %}
+
+<br></br>
+
+<body style="background-color: lightblue;">
+
+<div class="container">
+  <div class="wrapper">
+    <table class="table table-borderless" bgcolor="#C4DAFC"  width="100%">
+      <thead>
+        <tr bgcolor="#1D498C">
+          <td colspan="10" align="center"><strong>List Pemesanan</strong> </td>
+        </tr>
+
+        <!--LIST PEMESANAN-->
+        <tr bgcolor="#4E88E0">
+          <td align="center"><strong>Stadium</strong></td>
+          <td align="center"><strong>Waktu</strong></td>
+        </tr>
+
+        <tr align="center">
+          <td>Stadion Universitas Indonesia</td>
+          <td>2023-03-27 9:00:00</td>
+        </tr>
+
+        <tr align="center">
+          <td>Stadion IPB</td>
+          <td>2023-03-27 15:00:00</td>
+        </tr>
+
+        <tr align="center">
+          <td>Stadion Binus</td>
+          <td>2023-03-27 13:00:00</td>
+        </tr>
+    </table>
+  </div>
+</div>
+<br></br>
+
+<div class="d-grid gap-2 col-6 mx-auto">
+  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#PemainPopup">Pesan Stadium</button>
+</div>
+
+
+
+<!-- Modal Pesan Stadium-->
+<div class="modal fade" id="PemainPopup" tabindex="-1" aria-labelledby="PemainPopup" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="PemainPopupLabel">Peminjaman Stadium</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-outline mb-4">
+
+            <!--DAFTARKAN PEMAIN BARU DENGAN DROPDOWN-->
+              <label for="stadium"class="form-label" for="typeEmailX-2">Stadium</label>
+              <form>
+                <select id="pemain" name="pemain">
+                  <option value="1">Stadion Universitas Indonesia</option>
+                  <option value="2">Stadion IPB</option>
+                  <option value="3">Stadion Binus</option>
+                </select>
+              </form><br>
+              <label for="tanggal"class="form-label" for="typeEmailX-2">Tanggal</label>
+              <form>
+                <input type="date" id="tanggal" name="stadium">
+              </form><br>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary">Cari</button>
+          </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+{% endblock content %}

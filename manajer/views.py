@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
+from .models import Tim, Pemain, Pelatih
 
 def dashboard_manajer(request):
     username = request.session.get('username')
@@ -66,3 +67,81 @@ def get_tim(cursor, id: str):
     cursor.execute(query_get_status,(id,))
     results = cursor.fetchall()
     return results[0][0]
+
+def read_peminjaman_stadium():
+    return
+
+def crt_peminjaman_stadium():
+    return
+
+def del_peminjaman_stadium():
+    return
+
+#Bagian Mengelola Tim
+def registrasi_tim(request):
+    if request.method == 'POST':
+        nama_tim = request.POST['nama_tim']
+        universitas = request.POST['universitas']
+        Tim.objects.create(nama_tim=nama_tim, universitas=universitas)
+        return redirect('daftar_tim')
+
+    return render(request, 'registrasi_tim.html')
+
+# def daftar_tim(request):
+#     tim_list = Tim.objects.all()
+#     return render(request, 'daftar_tim.html', {'tim_list': tim_list})
+
+def daftar_pemain(request, tim_id):
+    tim = Tim.objects.get(id=tim_id)
+    pemain_list = tim.pemain.all()
+    return render(request, {'tim': tim, 'pemain_list': pemain_list})
+
+def daftar_pelatih(request, tim_id):
+    tim = Tim.objects.get(id=tim_id)
+    pelatih_list = tim.pelatih.all()
+    return render(request, {'tim': tim, 'pelatih_list': pelatih_list})
+
+def tambah_pemain(request, tim_id):
+    if request.method == 'POST':
+        pemain_id = request.POST['pemain_id']
+        pemain = Pemain.objects.get(id=pemain_id)
+        pemain.tim_id = tim_id
+        pemain.save()
+        return redirect('daftar_pemain', tim_id=tim_id)
+
+    pemain_tersedia = Pemain.objects.filter(tim__isnull=True)
+    return render(request,{'pemain_tersedia': pemain_tersedia})
+
+def tambah_pelatih(request, tim_id):
+    if request.method == 'POST':
+        pelatih_id = request.POST['pelatih_id']
+        pelatih = Pelatih.objects.get(id=pelatih_id)
+        pelatih.tim_id = tim_id
+        pelatih.save()
+        return redirect('daftar_pelatih', tim_id=tim_id)
+
+    pelatih_tersedia = Pelatih.objects.filter(tim__isnull=True)
+    return render(request, {'pelatih_tersedia': pelatih_tersedia})
+
+def hapus_pemain(request, tim_id, pemain_id):
+    tim = get_object_or_404(Tim, id=tim_id)
+    pemain = get_object_or_404(Pemain, id=pemain_id, tim=tim)
+    pemain.tim = None
+    pemain.save()
+    return redirect('daftar_pemain', tim_id=tim_id)
+
+def hapus_pelatih(request, tim_id, pelatih_id):
+    tim = get_object_or_404(Tim, id=tim_id)
+    pelatih = get_object_or_404(Pelatih, id=pelatih_id, tim=tim)
+    pelatih.tim = None
+    pelatih.save()
+    return redirect('daftar_pelatih', tim_id=tim_id)
+
+def make_captain(request, tim_id, pemain_id):
+    tim = get_object_or_404(Tim, id=tim_id)
+    pemain = get_object_or_404(Pemain, id=pemain_id, tim=tim)
+    tim.pemain_set.update(is_captain=False)
+    pemain.is_captain = True
+    pemain.save()
+    
+    return redirect('daftar_pemain', tim_id=tim_id)
