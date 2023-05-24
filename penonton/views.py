@@ -6,11 +6,12 @@ import uuid
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 locale.setlocale(locale.LC_ALL, '')
-from django.http import JsonResponse
+
 from penonton.models import *
 
 # TODO: Handle error kalau tidak ada jadwal pertandingan pada hari itu
 
+### UNTUK CR Pembelian_Tiket
 def dashboard_penonton(request):
     return render(request, 'dashboard_penonton.html')
 
@@ -78,11 +79,12 @@ def list_waktu_stadium(request):
     if (request.method == 'POST'):
         id_pertandingan = request.POST.get('id_pertandingan')
         PertandinganTemp.objects.create(id_pertandingan=id_pertandingan)
-        return HttpResponseRedirect(reverse("penonton:list_pertandingan")) 
+        return HttpResponseRedirect(reverse("penonton:pilihan_pertandingan")) 
 
     return render(request, 'list_waktu_stadium.html', context=context)
 
-def list_pertandingan(request):
+def pilihan_pertandingan(request):
+
     pertandingan_temps = PertandinganTemp.objects.all()
     pertandingan_list = [pt_temp.id_pertandingan for pt_temp in pertandingan_temps]
 
@@ -103,4 +105,33 @@ def list_pertandingan(request):
     cursor.execute("set search_path to uleague")
     list_waktu_stadium = get_waktu_stadium(nama_stadium, selected_date, cursor)
 
-    return
+    return context
+
+### UNTUK R LIST PERTANDINGAN
+def list_pertandingan(request):
+    context = {}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="qistina",
+        password="Qistina04"
+    )
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    list_tanding = get_list_pertandingan(cursor)
+    context['pertandingan'] = list_tanding
+    db_connection.close()
+    return render(request, 'list_pertandingan.html', context=context)
+
+def get_list_pertandingan(cursor):
+    query_get_list = """
+    SELECT string_agg(tp.nama_tim, ' vs ') as tim, s.nama, p.start_datetime, p.end_datetime::time as waktuakhir, p.id_pertandingan
+    FROM Pertandingan p
+    JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
+    JOIN Stadium s ON s.id_stadium = p.stadium
+    GROUP BY s.nama, p.start_datetime, p.id_pertandingan
+    ORDER BY p.start_datetime
+    """
+    list_tanding = cursor.execute(query_get_list,)
+    list_tanding = cursor.fetchall()
+    return list_tanding
