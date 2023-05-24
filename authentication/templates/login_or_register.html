@@ -48,11 +48,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form method="post" action="{% url 'authentication:register' %}">
+            {% csrf_token %}
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-primary" type="button" onclick="location.href='register_manajer_penonton'">Manajer</button>
-                <button class="btn btn-primary" type="button" onclick="location.href='register_manajer_penonton'">Penonton</button>
-                <button class="btn btn-primary" type="button" onclick="location.href='register_panitia'">Panitia</button>
+                <button class="btn btn-primary" type="submit" name="button_value" value="manajer">Manajer</button>
+                <button class="btn btn-primary" type="submit" name="button_value" value="penonton">Penonton</button>
+                <button class="btn btn-primary" type="submit" name="button_value" value="panitia">Panitia</button>
             </div>
+          </form>
         </div>
 
         <div class="modal-footer">

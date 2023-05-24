@@ -15,8 +15,8 @@ def dashboard_manajer(request):
     cursor.execute("set search_path to ULeague")
 
     # Untuk Informasi
+    print(username)
     informasi = get_informasi(cursor, username)
-    print(informasi) 
     status = get_status(cursor,informasi[0][0]) 
     nama_tim = get_tim(cursor,informasi[0][0]) 
 
@@ -65,4 +65,7 @@ def get_tim(cursor, id: str):
     """
     cursor.execute(query_get_status,(id,))
     results = cursor.fetchall()
-    return results[0][0]
+    if len(results) == 0:
+        return "Belum membuat tim"
+    else:
+        return results[0][0]

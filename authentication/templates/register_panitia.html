@@ -8,8 +8,30 @@
 
 {% block content %}
 
+<script>
+  function validateForm() {
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].hasAttribute('required') && inputs[i].value === '') {
+        alert('Harap isi semua kolom form.');
+        return false;
+      }
+    }
+    return true;
+  }
+  </script>  
+
 <!-- Form Register-->
 <section style="background-color: lightblue;">
+  <form method="post" action="{% url 'authentication:register_panitia' %}" onsubmit="return validateForm()">
+    {% csrf_token %}
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -20,37 +42,37 @@
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typeEmailX-2">Username</label>
-                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" name="username" required/>
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typePasswordX-2">Password</label>
-                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" name="password" required/>
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typeEmailX-2">Nama Depan</label>
-                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" name="Nama_Depan" required/>
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typePasswordX-2">Nama Belakang</label>
-                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" name="Nama_Belakang" required/>
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typeEmailX-2">Nomor HP</label>
-                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" name="Nomor_HP" required/>
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typePasswordX-2">Email</label>
-                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" name="Email" required />
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="typeEmailX-2">Alamat</label>
-                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+                <input type="text" id="typeEmailX-2" class="form-control form-control-lg" name="Alamat" required/>
               </div>
 
               <fieldset>
@@ -87,13 +109,13 @@
 
             <div class="form-outline mb-4">
                 <label class="form-label" for="typePasswordX-2">Jabatan</label>
-                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" />
+                <input type="text" id="typePasswordX-2" class="form-control form-control-lg" name="Jabatan" required/>
               </div>
   
               <hr class="my-4">
 
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-primary" type="button">Register</button>
+                <button class="btn btn-primary" type="submit">Register</button>
             </div>
 
             </div>
@@ -101,6 +123,7 @@
         </div>
       </div>
     </div>
+  </form>
 </section>
 
 {% endblock content %}
