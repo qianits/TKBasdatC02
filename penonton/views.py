@@ -26,17 +26,6 @@ def dashboard_penonton(request):
     alamat = informasi[0][5]
 
     if info_pertandingan != None:
-        # tim_bertanding = get_tim_bertanding(cursor, info_pertandingan[0][0]) 
-        # tim_1 = tim_bertanding[0][0]
-        # tim_2 = tim_bertanding[1][0]
-        # tim_bertanding = tim_1 + " vs " + tim_2
-
-        # nama_stadion = get_nama_stadion(cursor, info_pertandingan[0][3])
-        # nama_stadion = nama_stadion[0][0]
-
-        # start_time = info_pertandingan[0][1]
-        # end_time = info_pertandingan[0][2]
-
         list_of_id_pertandingan = [x[0] for x in info_pertandingan]
         list_of_id_stadium = [x[3] for x in info_pertandingan]
         
