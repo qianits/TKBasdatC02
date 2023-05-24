@@ -121,6 +121,10 @@ def list_pertandingan(request):
     list_tanding = get_list_pertandingan(cursor)
     context['pertandingan'] = list_tanding
     db_connection.close()
+    if (request.method == 'POST'):
+        rapat = request.POST.get('nama_stadium')
+        StadiumTemp.objects.create(nama_stadium=nama_stadium, tanggal=selected_date)
+        return HttpResponseRedirect(reverse("penonton:list_waktu_stadium")) 
     return render(request, 'list_pertandingan.html', context=context)
 
 def get_list_pertandingan(cursor):
