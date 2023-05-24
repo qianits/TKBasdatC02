@@ -128,3 +128,9 @@ def get_list_of_tim_manajer(cursor, id: str):
     tim_manajer = (tim[0][0], nama_manajer[0][0])
     
     return tim_manajer
+
+def panitia_memulai_pertandingan(request):
+    return render(request, "mulai_pertandingan.html")
+
+def panitia_manage_pertandingan(request):
+    return render(request, "manage_pertandingan.html")

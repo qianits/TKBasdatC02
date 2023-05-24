@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Pertandingan</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table-primary {
+            background-color: #003049;
+            color: #fff;
+        }
+
+        .table-info {
+            background-color: #caf0f8;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Data Pertandingan</h2>
+    <table class="table table-primary">
+        <thead>
+            <tr>
+                <th>ID Pertandingan</th>
+                <th>Tim</th>
+                <th>Skor</th>
+                <th>Peristiwa</th>
+            </tr>
+        </thead>
+        <tbody id="data-body" class="table-info"></tbody>
+    </table>
+    <p id="empty-message" class="empty-message" style="display: none;">Tidak ada pertandingan.</p>
+
+    <script>
+        // Simulasi data JSON
+        var jsonData = [
+            {
+                "grup": "Grup A",
+                "tim": "Tim A",
+                "waktu_pertandingan": "10:00",
+                "pemenang": "Tim A",
+                "history_peristiwa": ["Gol oleh Tim A", "Kartu Kuning untuk Tim B"]
+            },
+            {
+                "grup": "Grup B",
+                "tim": "Tim B",
+                "waktu_pertandingan": "14:00",
+                "pemenang": "Tim B",
+                "history_peristiwa": ["Gol oleh Tim B", "Assist oleh Tim B"]
+            },
+            {
+                "grup": "Grup C",
+                "tim": "Tim C",
+                "waktu_pertandingan": "16:00",
+                "pemenang": "Seri",
+                "history_peristiwa": ["Gol oleh Tim C", "Kartu Merah untuk Tim C"]
+            }
+        ];
+
+        var tableBody = document.getElementById("data-body");
+        var emptyMessage = document.getElementById("empty-message");
+
+        // Menampilkan data dalam tabel
+        function showData() {
+            if (jsonData.length === 0) {
+                emptyMessage.style.display = "block";
+                tableBody.innerHTML = "";
+            } else {
+                emptyMessage.style.display = "none";
+                tableBody.innerHTML = "";
+
+
+
+                // Menampilkan data dalam tabel
+                for (var i = 0; i < jsonData.length; i++) {
+                    var row = document.createElement("tr");
+
+                    var grupCell = document.createElement("td");
+                    grupCell.textContent = jsonData[i].grup;
+                    row.appendChild(grupCell);
+
+                    var timCell = document.createElement("td");
+                    timCell.textContent = jsonData[i].tim;
+                    row.appendChild(timCell);
+
+                    var waktuCell = document.createElement("td");
+                    waktuCell.textContent = jsonData[i].waktu_pertandingan;
+                    row.appendChild(waktuCell);
+
+                    var pemenangCell = document.createElement("td");
+                    pemenangCell.textContent = jsonData[i].pemenang;
+                    row.appendChild(pemenangCell);
+
+                    var peristiwaCell = document.createElement("td");
+                    peristiwaCell.textContent = jsonData[i].history_peristiwa.join(", ");
+                    row.appendChild(peristiwaCell);
+
+                    tableBody.appendChild(row);
+                }
+            }
+        }
+
+
+        // Memeriksa jika data JSON kosong
+        function checkEmptyData() {
+            if (jsonData.length === 0) {
+                emptyMessage.style.display = "block";
+            } else {
+                emptyMessage.style.display = "none";
+            }
+        }
+
+        // Memanggil fungsi untuk menampilkan data pertama kali
+        showData();
+    </script>
+</body>
+
+</html>
