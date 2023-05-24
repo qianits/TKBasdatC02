@@ -140,7 +140,34 @@ def panitia_memulai_pertandingan(request):
     return render(request, "mulai_pertandingan.html")
 
 def panitia_manage_pertandingan(request):
-    return render(request, "manage_pertandingan.html")
+    context = {}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="123"
+    )
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    list_pertandingan = get_list_pertandingan(cursor)
+    context['pertandingan'] = list_pertandingan
+    db_connection.close()
+    return render(request, 'manage_pertandingan.html', context=context)
+
+def get_list_pertandingan(cursor):
+    query_get_list = """
+    SELECT string_agg(tp.nama_tim, ' vs ') as tim, s.nama, p.start_datetime, p.end_datetime::time as waktuakhir, p.id_pertandingan
+    FROM Pertandingan p
+    JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
+    JOIN Stadium s ON s.id_stadium = p.stadium
+    GROUP BY s.nama, p.start_datetime, p.id_pertandingan
+    ORDER BY p.start_datetime
+    """
+    list_pertandingan = cursor.execute(query_get_list,)
+    list_pertandingan = cursor.fetchall()
+    print(list_pertandingan)
+    return list_pertandingan
+
 def crt_mulai_rapat():
     return
 
