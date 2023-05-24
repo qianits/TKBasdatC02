@@ -141,3 +141,8 @@ def panitia_memulai_pertandingan(request):
 
 def panitia_manage_pertandingan(request):
     return render(request, "manage_pertandingan.html")
+def crt_mulai_rapat():
+    return
+
+def read_mulai_rapat():
+    return

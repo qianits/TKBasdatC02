@@ -1,0 +1,50 @@
+{% extends 'base_manajer.html' %}
+{% load static %}
+
+{% block content %}
+
+<br></br>
+
+<body style="background-color: lightblue;">
+
+<div class="container">
+  <div class="wrapper">
+    <table class="table table-borderless" bgcolor="#C4DAFC"  width="100%">
+      <thead>
+        <tr bgcolor="#1D498C">
+          <td colspan="10" align="center"><strong>List Waktu Stadium Stadion IPB</strong> </td>
+        </tr>
+
+        <!--LIST PEMESANAN-->
+        <tr bgcolor="#4E88E0">
+          <td align="center"><strong>List Waktu</strong></td>
+          <td align="center"><strong>Action</strong></td>
+        </tr>
+
+        <tr align="center">
+          <td>9:00:00</td>
+          <td>
+            <button class="btn btn-primary" type="button">Pesan</button>
+          </td>
+        </tr>
+
+        <tr align="center">
+          <td>12:00:00</td>
+          <td>
+            <button class="btn btn-primary" type="button">Pesan</button>
+          </td>
+        </tr>
+
+        <tr align="center">
+          <td>16:00:00</td>
+          <td>
+            <button class="btn btn-primary" type="button">Pesan</button>
+          </td>
+        </tr>
+    </table>
+  </div>
+</div>
+<br></br>
+</body>
+
+{% endblock content %}
