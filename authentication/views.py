@@ -1,42 +1,209 @@
 import uuid
 from django.shortcuts import redirect, render, reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 import psycopg2
+from django.contrib.auth import logout
 
 
 def authentication(request):
     return render(request, 'login_or_register.html')
 
+@csrf_exempt
+def register(request):
+    if request.method == 'POST':
+        button_value = request.POST.get('button_value')
+        if button_value == 'manajer':
+            reg_role = 'manajer'
+            request.session['reg_role'] = reg_role
+            return redirect("authentication:register_manajer_penonton")
+        elif button_value == 'penonton':
+            reg_role = 'penonton'
+            request.session['reg_role'] = reg_role
+            return redirect("authentication:register_manajer_penonton")
+        elif button_value == 'panitia':
+            reg_role = 'panitia'
+            request.session['reg_role'] = reg_role
+            return redirect("authentication:register_panitia")
+    
+    return render(request, 'register.html')
+
 
 def register_manajer_penonton(request):
-    form = UserCreationForm()
 
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Akun telah berhasil dibuat!')
-            return redirect('authentication:register_manajer_penonton')
+    if request.method =='POST':
+        reg_role = request.session.get('reg_role')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        nama_depan = request.POST.get('Nama_Depan')
+        nama_belakang = request.POST.get('Nama_Belakang')
+        nomor_hp = request.POST.get('Nomor_HP')
+        email = request.POST.get('Email')
+        alamat = request.POST.get('Alamat')
+        status = request.POST.get('drone')
+        # Generate UUID
+        generated_uuid = uuid.uuid4()
+        uuid_string = str(generated_uuid)
+
+        db_connection = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            password="123"
+        )
+
+        cursor = db_connection.cursor()
+        cursor.execute("set search_path to ULeague")
+
+        if reg_role == 'manajer':
+            # Insert manajer:
+            # tabel yang terlibat:
+            # - User_System
+            # - NON_PEMAIN (Generate uuid disini)
+            # - STATUS_NON_PEMAIN
+            # - Manajer
+
+            try:
+                insert_user_system(cursor, username, password)
+                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(cursor, uuid_string,status)
+                insert_manajer(cursor, uuid_string, username)
+                
+                db_connection.commit()
+                db_connection.close()
+            except psycopg2.errors.RaiseException as e:
+                error_message = str("Username sudah digunakan, mohon ganti username!")
+                return render(request, 'register_manajer_penonton.html', {'error': error_message})
+
+            request.session['username'] = username
+            return redirect(reverse("manajer:dashboard"), request=request)
+        
+        elif reg_role == 'penonton':
+            # Insert Penonton:
+            # tabel yang terlibat:
+            # - User_System
+            # - NON_PEMAIN (Generate uuid disini)
+            # - STATUS_NON_PEMAIN
+            # - Penonton
+
+            try:
+                insert_user_system(cursor, username, password)
+                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(cursor, uuid_string,status)
+                insert_penonton(cursor, uuid_string, username)
+                
+                db_connection.commit()
+                db_connection.close()
+            except psycopg2.errors.RaiseException as e:
+                error_message = str("Username sudah digunakan, mohon ganti username!")
+                return render(request, 'register_manajer_penonton.html', {'error': error_message})
+
+            request.session['username'] = username
+            return redirect(reverse("penonton:dashboard"), request=request)
+
+    return render(request, 'register_manajer_penonton.html')
     
-    context = {'form':form}
-    return render(request, 'register_manajer_penonton.html', context)
 
 def register_panitia(request):
-    form = UserCreationForm()
+    if request.method =='POST':
+        reg_role = request.session.get('reg_role')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        nama_depan = request.POST.get('Nama_Depan')
+        nama_belakang = request.POST.get('Nama_Belakang')
+        nomor_hp = request.POST.get('Nomor_HP')
+        email = request.POST.get('Email')
+        alamat = request.POST.get('Alamat')
+        status = request.POST.get('drone')
+        jabatan = request.POST.get('Jabatan')
+        # Generate UUID
+        generated_uuid = uuid.uuid4()
+        uuid_string = str(generated_uuid)
 
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Akun telah berhasil dibuat!')
-            return redirect('authentication:register_panitia')
+        db_connection = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            password="123"
+        )
+
+        cursor = db_connection.cursor()
+        cursor.execute("set search_path to ULeague")
+
+        if reg_role == 'panitia':
+            # Insert panitia:
+            # tabel yang terlibat:
+            # - User_System
+            # - NON_PEMAIN (Generate uuid disini)
+            # - STATUS_NON_PEMAIN
+            # - Panitia
+
+            try:
+                insert_user_system(cursor, username, password)
+                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(cursor, uuid_string,status)
+                insert_panitia(cursor, uuid_string,jabatan, username)
+                
+                db_connection.commit()
+                db_connection.close()
+            except psycopg2.errors.RaiseException as e:
+                error_message = str("Username sudah digunakan, mohon ganti username!")
+                return render(request, 'register_panitia.html', {'error': error_message})
+
+            request.session['username'] = username
+            return redirect(reverse("panitia:dashboard"), request=request)
+        
+    return render(request, 'register_panitia.html')
+
+def insert_user_system(cursor, username:str, password:str):
+    # Insert username & password to USER_SYSTEM
+    query_insert_user_system = """INSERT INTO USER_SYSTEM (Username, Password) 
+    VALUES (%s,%s)
+    """
+    cursor.execute(query_insert_user_system,(username, password))
+
+def insert_non_pemain(cursor,uuid_str:str, nama_depan:str, nama_belakang:str, nomor_hp:str, email:str, alamat:str):
     
-    context = {'form':form}
-    return render(request, 'register_panitia.html', context)
+    # Insert attribute ke tabel non_pemain
+    query_insert_non_pemain = """INSERT INTO NON_PEMAIN (ID, Nama_Depan, Nama_Belakang,
+    Nomor_HP, Email, Alamat) 
+    VALUES (%s,%s,%s,%s,%s,%s)
+    """
+    cursor.execute(query_insert_non_pemain,(uuid_str,nama_depan,nama_belakang,nomor_hp,email,alamat))
+    
+def insert_status_non_pemain(cursor,uuid_str:str,status:str):
+    # Insert ID dan Role to tabel STATUS_NON_PEMAIN
+    query_insert_status = """INSERT INTO STATUS_NON_PEMAIN (ID_Non_Pemain, Status) 
+    VALUES (%s,%s)
+    """
+    cursor.execute(query_insert_status,(uuid_str, status))
+
+def insert_manajer(cursor,uuid_str:str,username:str):
+    # Insert ID dan Username to tabel Manajer
+    query_insert_manajer = """INSERT INTO MANAJER (ID_Manajer, Username) 
+    VALUES (%s,%s)
+    """
+    cursor.execute(query_insert_manajer,(uuid_str, username))
+
+def insert_penonton(cursor,uuid_str:str,username:str):
+    # Insert ID dan Role to tabel Penonton
+    query_insert_penonton = """INSERT INTO PENONTON(ID_Penonton, Username) 
+    VALUES (%s,%s)
+    """
+    cursor.execute(query_insert_penonton,(uuid_str, username))
+
+def insert_panitia(cursor,uuid_str:str,jabatan:str,username:str):
+    # Insert ID dan Role to tabel Penonton
+    query_insert_penonton = """INSERT INTO PANITIA(ID_Panitia, Jabatan, Username) 
+    VALUES (%s,%s,%s)
+    """
+    cursor.execute(query_insert_penonton,(uuid_str,jabatan,username))
+
+
+
+
 
 
 # AUTH USING DB
@@ -128,7 +295,6 @@ def login(request):
 
         cursor = db_connection.cursor()
         cursor.execute("set search_path to ULeague")
-        id_user = str(uuid.uuid4())
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -159,33 +325,10 @@ def login(request):
             return redirect('authentication:authentication')
 
 
-
-    # if is_authenticated(request):
-    #     username = str(request.session["username"])
-    #     password = str(request.session["password"])
-    # else:
-    #     username = str(request.POST["username"])
-    #     password = str(request.POST["password"])
-
-    # role = get_role(username, password)
-
-    # if role == "":
-    #     return login_view(request)
-    # else:
-    #     request.session["username"] = username
-    #     request.session["password"] = password
-    #     request.session["role"] = role
-    #     request.session.set_expiry(0)
-    #     request.session.modified = True
-
-    #     if role == "manajer":
-    #         return redirect("manajer:dashboard_manajer")
-    #     elif role == "panitia":
-    #         return redirect("panitia:dashboard_panitia")
-    #     elif role == "penonton":
-    #         return redirect("penonton:dashboard_penonton")
-    #     else:
-    #         return render(request, "login_or_register.html")
+def logout_page(request):
+    logout(request)
+    request.session.flush()
+    return redirect('authentication:authentication')
         
 
 def login_view(request):

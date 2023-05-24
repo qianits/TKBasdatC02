@@ -29,9 +29,14 @@ def dashboard_panitia(request):
     
 
     if info_rapat != None:
+
+        print(info_rapat)
         list_of_id_pertandingan = [x[0] for x in info_rapat]
         list_of_datetime = [x[1] for x in info_rapat]
         list_of_isi_rapat = [x[5] for x in info_rapat]
+
+        print(list_of_id_pertandingan)
+        
     
 
         temps_tim_1 = [x[3] for x in info_rapat]
@@ -52,6 +57,8 @@ def dashboard_panitia(request):
         tup1 = [(item,) for item in list_of_id_pertandingan]
         tup2 = [(item,) for item in list_of_datetime]
         tup3 = [(item,) for item in list_of_isi_rapat]
+
+        print(tup1)
 
         data = list(zip(tup1, tup2, list_of_tim_manajer_1, list_of_tim_manajer_2, tup3))
 
