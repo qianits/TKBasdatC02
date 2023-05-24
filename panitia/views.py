@@ -135,3 +135,9 @@ def get_list_of_tim_manajer(cursor, id: str):
     tim_manajer = (tim[0][0], nama_manajer[0][0])
     
     return tim_manajer
+
+def crt_mulai_rapat():
+    return
+
+def read_mulai_rapat():
+    return
