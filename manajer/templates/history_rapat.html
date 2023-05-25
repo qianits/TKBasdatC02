@@ -221,19 +221,19 @@
   {% for i in rapat %}
   <div class="row">
     <div class="cell" data-title="Rapat Tim">
-    {{i.0}}
+    {{i.tim}}
     </div>
     <div class="cell" data-title="Nama Panitia">
-    {{i.1}}
+    {{i.nama_panitia}}
     </div>
     <div class="cell" data-title="Stadium">
-    {{i.2}}
+    {{i.nama}}
     </div>
     <div class="cell" data-title="Tanggal dan Waktu">
-    {{i.3}} - {{i.4}}
+    {{i.start_datetime}} - {{i.waktu_akhir}}
     </div>
     <div class="cell" data-title="Action">
-        <button type="button" class="btn btn-link" onclick="window.location.href='../../manajer/notulensi_rapat/{{i.5}}'"> Lihat Laporan Rapat</button>
+        <button type="button" class="btn btn-link" onclick="window.location.href='../../manajer/notulensi_rapat/{{i.id_pertandingan}}'"> Lihat Laporan Rapat</button>
     </div>
     {% endfor %}
 
