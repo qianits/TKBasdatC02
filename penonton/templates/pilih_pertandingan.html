@@ -1,0 +1,57 @@
+{% extends 'base_penonton.html' %}
+<!DOCTYPE html>
+
+{% load static %}
+
+{% block meta %}
+<title>List Pertandingan</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+<style>
+  /* Add styles for the container with shadow and blur */
+  .container-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+</style>
+</head>
+<body style="margin-bottom: 100px;">
+<div class="container mt-5">
+    <h2 class="text-center mb-4">⚽️ List Pertandingan {{nama_stadium}} </h2>
+    <h3 class="text-center mb-4">pada tanggal {{tanggal}}</h3>
+    <div class="container container-shadow p-5">
+      <table class="table table-bordered">
+        <thead>
+
+          <tr>
+            <th>Tim 1</th>
+            <th>Tim 2</th>
+            <th>Waktu</th>
+            <th> </th>
+          </tr>
+        </thead>
+
+        {% for i in waktu %}
+        <tbody>
+          <tr>
+            <td>{{i.0}}</td>
+            <td>{{i.1}}</td>
+            <td>{{i.3}} - {{i.4}}</td>
+            <td><button type="button" class="btn btn-link" onclick="window.location.href='../../penonton/beli_tiket/{{i.5}}'"> Pilih</button></td>
+          </tr>
+        </form>
+        </tbody>
+        {% endfor %}
+
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>
+
+{% endblock content %}

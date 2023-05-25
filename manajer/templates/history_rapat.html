@@ -128,7 +128,7 @@
 
 .row .cell:nth-child(1) {
     width: 200px;
-    padding-left: 50px
+    padding-left: 100px
 }
 
 .row .cell:nth-child(2) {
@@ -232,12 +232,8 @@
     <div class="cell" data-title="Tanggal dan Waktu">
     {{i.3}} - {{i.4}}
     </div>
-    <form method="POST" action="">
-    {% csrf_token %}
     <div class="cell" data-title="Action">
-        <a class="btn btn-outline-primary" href="{% url 'manajer:notulensi_rapat' rapat=i.5 %}">Link Rapat Disini</a>
-    </div>
-    </form>
+        <button type="button" class="btn btn-link" onclick="window.location.href='../../manajer/notulensi_rapat/{{i.5}}'"> Lihat Laporan Rapat</button>
     </div>
     {% endfor %}
 
