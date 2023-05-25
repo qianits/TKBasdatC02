@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
-
+from .models import Rapat
 
 
 def dashboard_panitia(request):
@@ -136,8 +136,19 @@ def get_list_of_tim_manajer(cursor, id: str):
     
     return tim_manajer
 
-def crt_mulai_rapat():
-    return
+def daftar_pertandingan(request):
+    pertandingan = Rapat.objects.all()
+    context = {'pertandingan': pertandingan}
+    return render(request, 'rapat_pertandingan.html', context)
 
-def read_mulai_rapat():
-    return
+def mulai_rapat(request, id_pertandingan):
+    if request.method == 'POST':
+        isi_rapat = request.POST['isi_rapat']
+        # Simpan isi rapat ke database atau lakukan tindakan lain yang diperlukan
+
+        return redirect('dashboard_panitia')  # Arahkan kembali ke halaman Dashboard setelah rapat selesai
+
+    pertandingan = Rapat.objects.get(id_pertandingan=id_pertandingan)
+    context = {'pertandingan': pertandingan}
+    return render(request, 'mulai_rapat.html', context)
+
