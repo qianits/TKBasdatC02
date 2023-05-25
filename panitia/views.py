@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
-
+from django.db import connection
 
 
 def dashboard_panitia(request):
@@ -136,8 +136,20 @@ def get_list_of_tim_manajer(cursor, id: str):
     
     return tim_manajer
 
-def crt_mulai_rapat():
-    return
+def pertandingan_list(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT p.id_pertandingan, t1.nama_tim, t2.nama_tim, s.nama, p.start_datetime, p.end_datetime FROM pertandingan p JOIN tim t1 ON t1.nama_tim = p.nama_tim_a JOIN tim t2 ON t2.nama_tim = p.nama_tim_b JOIN stadium s ON s.id_stadium = p.stadium")
+        pertandingan_list = cursor.fetchall()
 
-def read_mulai_rapat():
-    return
+    return render(request, 'rapat_pertandingan.html', {'pertandingan_list': pertandingan_list})
+
+def rapat_form(request, id_pertandingan):
+    if request.method == 'POST':
+        isi_rapat = request.POST.get('isi_rapat')
+
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO rapat (id_pertandingan, isi_rapat) VALUES (%s, %s)", [id_pertandingan, isi_rapat])
+
+        return redirect('dashboard_panitia')
+
+    return render(request, 'mulai_rapat.html', {'id_pertandingan': id_pertandingan})
