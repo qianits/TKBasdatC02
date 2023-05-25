@@ -4,234 +4,255 @@
 {% block meta %}
 
 <head>
-    <title>Manage Pertandingan</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .table-primary {
-            background-color: #003049;
-            color: #fff;
-        }
+  <title>Manage Pertandingan</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .table-primary {
+      background-color: #003049;
+      color: #fff;
+    }
 
-        .table-info {
-            background-color: #caf0f8;
-            color: #000;
-        }
+    .table-info {
+      background-color: #caf0f8;
+      color: #000;
+    }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
 
-        .btn-primary:hover {
-            background-color: #0069d9;
-            border-color: #0062cc;
-        }
+    .btn-primary:hover {
+      background-color: #0069d9;
+      border-color: #0062cc;
+    }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #545b62;
-        }
-    </style>
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+  </style>
 </head>
 {% endblock meta %}
 
 {% block content %}
 
 <body>
-    <section style="background-color: lightblue; height: 955px;">
-        <div class="container py-5 h4 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <!-- <div class="col-12 col-md-8 col-lg-6 col-xl-8"> -->
-                <div class="card shadow-2-strong px-0" style="border-radius: 1rem;">
-                    <div class="card-header text-center pt-3" style="background-color: #508bfc; ">
-                        <h2>LIST PERTANDINGAN GRUP STAGE</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-body p-5 text-center pt-0">
-                            <div class="container mt-5">
-                              <body>
-                                <div class="container">
-                                  <table class="table table-primary">
-                                    <thead>
-                                      <tr>
-                                        <th>Grup</th>
-                                        <th>Tim</th>
-                                        <th>Waktu</th>
-                                        <th>Pemenang</th>
-                                        <th>Action</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody id="data-body"></tbody>
-                                  </table>
-                                  <p id="empty-message" class="empty-message" style="display: none;">Tidak ada pertandingan.</p>
-                              
-                                  <!-- Modal Peristiwa Tim A -->
-                                  <div class="modal fade" id="modalTimA">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h5 class="modal-title">Peristiwa Tim A</h5>
-                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                              
-                                  <!-- Modal Peristiwa Tim B -->
-                                  <div class="modal fade" id="modalTimB">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h5 class="modal-title">Peristiwa Tim B</h5>
-                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                              
-                                </div>
-                              
-                                <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-                                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-                                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                                <script>
-                                  var jsonData = [
-                                    {
-                                      "grup": "Grup A",
-                                      "tim": "Tim A",
-                                      "waktu_pertandingan": "10:00",
-                                      "pemenang": "Tim A",
-                                      "history_peristiwa": ["Gol oleh Pemain A", "Kartu Kuning untuk Pemain B"]
-                                    },
-                                    {
-                                      "grup": "Grup B",
-                                      "tim": "Tim B",
-                                      "waktu_pertandingan": "14:00",
-                                      "pemenang": "Tim B",
-                                      "history_peristiwa": ["Gol oleh Pemain B", "Assist oleh Pemain B"]
-                                    },
-                                    {
-                                      "grup": "Grup C",
-                                      "tim": "Tim C",
-                                      "waktu_pertandingan": "16:00",
-                                      "pemenang": "Seri",
-                                      "history_peristiwa": ["Gol oleh Pemain C", "Kartu Merah untuk Pemain C"]
-                                    }
-                                  ];
-                              
-                                  var tableBody = document.getElementById("data-body");
-                                  var emptyMessage = document.getElementById("empty-message");
-                              
-                                  // Menampilkan data dalam tabel
-                                  function showData() {
-                                    if (jsonData.length === 0) {
-                                      emptyMessage.style.display = "block";
-                                      tableBody.innerHTML = "";
-                                    } else {
-                                      emptyMessage.style.display = "none";
-                                      tableBody.innerHTML = "";
-                              
-                                      // Menampilkan data dalam tabel
-                                      for (var i = 0; i < jsonData.length; i++) {
-                                        var row = document.createElement("tr");
-                              
-                                        var grupCell = document.createElement("td");
-                                        grupCell.textContent = jsonData[i].grup;
-                                        row.appendChild(grupCell);
-                              
-                                        var timCell = document.createElement("td");
-                                        timCell.textContent = jsonData[i].tim;
-                                        row.appendChild(timCell);
-                              
-                                        var waktuCell = document.createElement("td");
-                                        waktuCell.textContent = jsonData[i].waktu_pertandingan;
-                                        row.appendChild(waktuCell);
-                              
-                                        var pemenangCell = document.createElement("td");
-                                        pemenangCell.textContent = jsonData[i].pemenang;
-                                        row.appendChild(pemenangCell);
-                              
-                                        var actionCell = document.createElement("td");
-                              
-                                        var buttonTimA = document.createElement("button");
-                                        buttonTimA.textContent = "Peristiwa Tim A";
-                                        buttonTimA.className = "btn btn-primary";
-                                        buttonTimA.setAttribute("data-toggle", "modal");
-                                        buttonTimA.setAttribute("data-target", "#modalTimA");
-                                        buttonTimA.addEventListener("click", function() {
-                                          showPeristiwaModal(jsonData[i].history_peristiwa, "modal-body-timA");
-                                        });
-                                        actionCell.appendChild(buttonTimA);
-                              
-                                        var buttonTimB = document.createElement("button");
-                                        buttonTimB.textContent = "Peristiwa Tim B";
-                                        buttonTimB.className = "btn btn-primary";
-                                        buttonTimB.setAttribute("data-toggle", "modal");
-                                        buttonTimB.setAttribute("data-target", "#modalTimB");
-                                        buttonTimB.addEventListener("click", function() {
-                                          showPeristiwaModal(jsonData[i].history_peristiwa, "modal-body-timB");
-                                        });
-                                        actionCell.appendChild(buttonTimB);
-                              
-                                        row.appendChild(actionCell);
-                              
-                                        tableBody.appendChild(row);
-                                      }
-                                    }
-                                  }
-                              
-                                  // Menampilkan peristiwa dalam modal
-                                  function showPeristiwaModal(peristiwaData, modalBodyId) {
-                                    var modalBody = document.getElementById(modalBodyId);
-                                    modalBody.innerHTML = "";
-                              
-                                    for (var i = 0; i < peristiwaData.length; i++) {
-                                      var peristiwa = peristiwaData[i];
-                              
-                                      var row = document.createElement("div");
-                                      row.className = "row";
-                              
-                                      var col1 = document.createElement("div");
-                                      col1.className = "col-6";
-                                      col1.textContent = "Nama Pemain";
-                                      row.appendChild(col1);
-                              
-                                      var col2 = document.createElement("div");
-                                      col2.className = "col-6";
-                                      col2.textContent = peristiwa;
-                                      row.appendChild(col2);
-                              
-                                      modalBody.appendChild(row);
-                                    }
-                                  }
-                              
-                                  // Memeriksa jika data JSON kosong
-                                  function checkEmptyData() {
-                                    if (jsonData.length === 0) {
-                                      emptyMessage.style.display = "block";
-                                    } else {
-                                      emptyMessage.style.display = "none";
-                                    }
-                                  }
-                              
-                                  // Memanggil fungsi untuk menampilkan data pertama kali
-                                  showData();
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </section>
+  <section style="background-color: lightblue; height: 955px;">
+    <div class="container py-5 h4 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <!-- <div class="col-12 col-md-8 col-lg-6 col-xl-8"> -->
+        <div class="card shadow-2-strong px-0" style="border-radius: 1rem;">
+          <div class="card-header text-center pt-3" style="background-color: #508bfc; ">
+            <h2>LIST PERTANDINGAN GRUP STAGE</h2>
+          </div>
+          <div class="card-body">
+            <div class="card-body p-5 text-center pt-0">
+              <div class="container mt-5">
 
-    <!-- Tambahkan skrip Bootstrap dan jQuery -->
-    <!-- Tambahkan skrip Bootstrap dan jQuery -->
+                <body>
+                  <div class="container">
+                    <table class="table table-primary">
+                      <thead>
+                        <tr>
+                          <th>Grup</th>
+                          <th>Tim</th>
+                          <th>Waktu</th>
+                          <th>Pemenang</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="data-body">
+                        {% for z in grup %}
+                        <tr>
+                          <td rowspan="4">sss</td>
+                          {% for i in pertandingan %}
+                          
+                          <td>{{ i.0 }}</td>
+                          <td>{{ i.1 }}</td>
+                          <td>{{ i.0 }}</td>
+                          <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTimA">Peristiwa Tim
+                              A</button><button class="btn btn-primary" data-toggle="modal"
+                              data-target="#modalTimB">Peristiwa Tim B
+                            </button>
+                          </td>
+                          {% endfor %}
+                              
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    <p id="empty-message" class="empty-message" style="display: none;">Tidak ada pertandingan.</p>
+
+                    <!-- Modal Peristiwa Tim A -->
+                    <div class="modal fade" id="modalTimA">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Peristiwa Tim A</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal Peristiwa Tim B -->
+                    <div class="modal fade" id="modalTimB">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Peristiwa Tim B</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                  <script>
+                    var jsonData = [
+                      {
+                        "grup": "Grup A",
+                        "tim": "Tim A",
+                        "waktu_pertandingan": "10:00",
+                        "pemenang": "Tim A",
+                        "history_peristiwa": ["Gol oleh Pemain A", "Kartu Kuning untuk Pemain B"]
+                      },
+                      {
+                        "grup": "Grup B",
+                        "tim": "Tim B",
+                        "waktu_pertandingan": "14:00",
+                        "pemenang": "Tim B",
+                        "history_peristiwa": ["Gol oleh Pemain B", "Assist oleh Pemain B"]
+                      },
+                      {
+                        "grup": "Grup C",
+                        "tim": "Tim C",
+                        "waktu_pertandingan": "16:00",
+                        "pemenang": "Seri",
+                        "history_peristiwa": ["Gol oleh Pemain C", "Kartu Merah untuk Pemain C"]
+                      }
+                    ];
+
+                    var tableBody = document.getElementById("data-body");
+                    var emptyMessage = document.getElementById("empty-message");
+
+                    // Menampilkan data dalam tabel
+                    function showData() {
+                      if (jsonData.length === 0) {
+                        emptyMessage.style.display = "block";
+                        tableBody.innerHTML = "";
+                      } else {
+                        emptyMessage.style.display = "none";
+                        tableBody.innerHTML = "";
+
+                        // Menampilkan data dalam tabel
+                        for (var i = 0; i < jsonData.length; i++) {
+                          var row = document.createElement("tr");
+
+                          var grupCell = document.createElement("td");
+                          grupCell.textContent = 'Grup X';
+                          row.appendChild(grupCell);
+
+                          var timCell = document.createElement("td");
+                          timCell.textContent = jsonData[i][1];
+                          row.appendChild(timCell);
+
+
+                          var waktuCell = document.createElement("td");
+                          waktuCell.textContent = jsonData[i].waktu_pertandingan;
+                          row.appendChild(waktuCell);
+
+                          var pemenangCell = document.createElement("td");
+                          pemenangCell.textContent = jsonData[i].pemenang;
+                          row.appendChild(pemenangCell);
+
+                          var actionCell = document.createElement("td");
+
+                          var buttonTimA = document.createElement("button");
+                          buttonTimA.textContent = "Peristiwa Tim A";
+                          buttonTimA.className = "btn btn-primary";
+                          buttonTimA.setAttribute("data-toggle", "modal");
+                          buttonTimA.setAttribute("data-target", "#modalTimA");
+                          buttonTimA.addEventListener("click", function () {
+                            showPeristiwaModal(jsonData[i].history_peristiwa, "modal-body-timA");
+                          });
+                          actionCell.appendChild(buttonTimA);
+
+                          var buttonTimB = document.createElement("button");
+                          buttonTimB.textContent = "Peristiwa Tim B";
+                          buttonTimB.className = "btn btn-primary";
+                          buttonTimB.setAttribute("data-toggle", "modal");
+                          buttonTimB.setAttribute("data-target", "#modalTimB");
+                          buttonTimB.addEventListener("click", function () {
+                            showPeristiwaModal(jsonData[i].history_peristiwa, "modal-body-timB");
+                          });
+                          actionCell.appendChild(buttonTimB);
+
+                          row.appendChild(actionCell);
+
+                          tableBody.appendChild(row);
+                        }
+                      }
+                    }
+
+                    // Menampilkan peristiwa dalam modal
+                    function showPeristiwaModal(peristiwaData, modalBodyId) {
+                      var modalBody = document.getElementById(modalBodyId);
+                      modalBody.innerHTML = "";
+
+                      for (var i = 0; i < peristiwaData.length; i++) {
+                        var peristiwa = peristiwaData[i];
+
+                        var row = document.createElement("div");
+                        row.className = "row";
+
+                        var col1 = document.createElement("div");
+                        col1.className = "col-6";
+                        col1.textContent = "Nama Pemain";
+                        row.appendChild(col1);
+
+                        var col2 = document.createElement("div");
+                        col2.className = "col-6";
+                        col2.textContent = peristiwa;
+                        row.appendChild(col2);
+
+                        modalBody.appendChild(row);
+                      }
+                    }
+
+                    // Memeriksa jika data JSON kosong
+                    function checkEmptyData() {
+                      if (jsonData.length === 0) {
+                        emptyMessage.style.display = "block";
+                      } else {
+                        emptyMessage.style.display = "none";
+                      }
+                    }
+
+                                  // Memanggil fungsi untuk menampilkan data pertama kali
+                                  // showData();
+                  </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Tambahkan skrip Bootstrap dan jQuery -->
+  <!-- Tambahkan skrip Bootstrap dan jQuery -->
 </body>
 {% endblock content %}

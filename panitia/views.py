@@ -137,9 +137,6 @@ def get_list_of_tim_manajer(cursor, id: str):
     return tim_manajer
 
 def panitia_memulai_pertandingan(request):
-    return render(request, "mulai_pertandingan.html")
-
-def panitia_manage_pertandingan(request):
     context = {}
     db_connection = psycopg2.connect(
         host="localhost",
@@ -152,7 +149,50 @@ def panitia_manage_pertandingan(request):
     list_pertandingan = get_list_pertandingan(cursor)
     context['pertandingan'] = list_pertandingan
     db_connection.close()
+    return render(request, 'mulai_pertandingan.html', context=context)
+
+
+
+def panitia_manage_pertandingan(request):
+    context = {}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="123"
+    )
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    list_pertandingan = get_list_skor(cursor)
+    list_pertandingan = get_list_pertandingan(cursor)
+    context['pertandingan'] = list_pertandingan
+    context['hasil_akhir'] = list_pertandingan
+    context['grup'] = [('Grup A'), ('Grup B'), ('Grup C'), ('Grup D')]
+
+    db_connection.close()
     return render(request, 'manage_pertandingan.html', context=context)
+
+def get_list_skor(cursor):
+    query_get_list = """
+    SELECT
+    p.id_pertandingan,
+    tp.nama_tim AS tim,
+    tp.skor
+    FROM
+    Pertandingan p
+    JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
+    WHERE
+    tp.skor = (
+        SELECT MAX(skor)
+        FROM Tim_Pertandingan
+        WHERE id_pertandingan = p.id_pertandingan
+    );
+
+    """
+    list_skor = cursor.execute(query_get_list,)
+    list_skor = cursor.fetchall()
+    print(list_skor)
+    return list_skor
 
 def get_list_pertandingan(cursor):
     query_get_list = """
