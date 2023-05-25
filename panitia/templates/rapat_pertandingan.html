@@ -35,15 +35,15 @@
         </tr>
       </thead>
       <tbody>
-        {% for pertandingan in pertandingan %}
+        {% for pertandingan in pertandingan_list %}
         <tr>
-          <td>{{ pertandingan.nama_tim_a }} vs {{ pertandingan.nama_tim_b }}</td>
-          <td>{{ pertandingan.stadium }}</td>
-          <td>{{ pertandingan.start_datetime }} - {{ pertandingan.end_datetime }}</td>
+          <td>{{ pertandingan.1 }} vs {{ pertandingan.2 }}</td>
+          <td>{{ pertandingan.3 }}</td>
+          <td>{{ pertandingan.4 }} - {{ pertandingan.5 }}</td>
           <td>
-            <form method="post" action="{% url 'mulai_rapat' pertandingan.id_pertandingan %}">
+            <form method="post" action="{% url 'rapat_form' pertandingan.0 %}">
               {% csrf_token %}
-              <button type="submit">Mulai Rapat</button>
+              <button type="submit" class="btn btn-primary pt-2">Mulai Rapat</button>
             </form>
           </td>
         </tr>
