@@ -36,8 +36,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{tim_pertandingan.0.1}}</td>
-                                            <td>{{tim_pertandingan.1.1}}</td>
+                                            <td>{{tim_pertandingan.0.nama_tim}}</td>
+                                            <td>{{tim_pertandingan.1.nama_tim}}</td>
                                             <td>
                                                 <button class="btn btn-primary" data-toggle="modal"
                                                     data-target="#peristiwaModal1">Masukkan Peristiwa Tim 1</button>
@@ -56,7 +56,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header" style="background-color: #508bfc; ">
-                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa Tim A
+                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.0.nama_tim}}
                                                 </h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
@@ -77,7 +77,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -96,7 +96,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -115,7 +115,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -134,7 +134,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -153,7 +153,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -183,7 +183,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header" style="background-color: #508bfc; ">
-                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.1.1}}
+                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.1.nama_tim}}
                                                 </h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
@@ -204,7 +204,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -223,7 +223,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -242,7 +242,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -261,7 +261,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
@@ -280,7 +280,7 @@
                                                                 <select class="form-control">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>

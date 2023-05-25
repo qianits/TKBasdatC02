@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
 from django.db import connection
-
+from utils.query import *
 
 def dashboard_panitia(request):
     username = request.session.get('username')
@@ -156,55 +156,57 @@ def query(query_str: str):
 
 
 def panitia_memulai_pertandingan(request, id):
-    print(id)
+    # print(id)
     context = {}
-    db_connection = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="postgres",
-        password="123"
-    )
-    cursor = db_connection.cursor()
-    cursor.execute("set search_path to uleague")
-    tim_pertandingan = get_pertandingan(cursor, id)
-    peristiwa = get_peristiwa(cursor, id)
-    pemain1 = get_pemain(cursor, tim_pertandingan[0][1])
-    pemain2 = get_pemain(cursor, tim_pertandingan[1][1])
+    # db_connection = psycopg2.connect(
+    #     host="localhost",
+    #     database="postgres",
+    #     user="postgres",
+    #     password="123"
+    # )
+    # cursor = db_connection.cursor()
+    # cursor.execute("set search_path to uleague")
+    tim_pertandingan = get_pertandingan(id)
+    # print(tim_pertandingan[1]['nama_tim'])
+    peristiwa = get_peristiwa(id)
+    pemain1 = get_pemain(tim_pertandingan[0]['nama_tim'])
+    pemain2 = get_pemain(tim_pertandingan[1]['nama_tim'])
     context['tim_pertandingan'] = tim_pertandingan
     context['peristiwa'] = peristiwa
     context['tim1'] = pemain1
     context['tim2'] = pemain2
-    db_connection.close()
-    print(tim_pertandingan[0][1])
+    # db_connection.close()
+    print(pemain2)
     return render(request, 'mulai_pertandingan.html', context=context)
 
-def get_peristiwa(cursor, id: str):
-    query_get_jabatan = """SELECT *
+
+def get_peristiwa( id: str):
+    results = query(f"""SELECT *
     FROM Peristiwa
-    WHERE id_pertandingan = %s
-    """
-    cursor.execute(query_get_jabatan,(id,))
-    results = cursor.fetchall()
+    WHERE id_pertandingan = '%s'
+    """ %(id))
+    # cursor.execute(query_get_jabatan,(id,))
+    # results = cursor.fetchall()
     return results
 
-def get_pertandingan(cursor, id: str):
-    query_get_jabatan = """SELECT tp.ID_Pertandingan, tb.Nama_Tim 
+def get_pertandingan( id: str):
+    results = query(f"""SELECT tp.ID_Pertandingan, tb.Nama_Tim 
     FROM TIM_PERTANDINGAN tp
     JOIN TIM tb ON tp.Nama_Tim = tb.Nama_Tim
-    WHERE tp.ID_pertandingan =  %s
-    """
-    cursor.execute(query_get_jabatan,(id,))
-    results = cursor.fetchall()
+    WHERE tp.ID_pertandingan = '%s'
+    """ %(id))
+    # cursor.execute(query_get_jabatan,(id,))
+    # results = cursor.fetchall()
     # print(results)
     return results
 
-def get_pemain(cursor, tim1: str):
-    query_get_jabatan = """SELECT ID_pemain, nama_depan, nama_belakang 
+def get_pemain( tim1: str):
+    results = query(f"""SELECT ID_pemain, nama_depan, nama_belakang 
     FROM Pemain p
-    WHERE p.nama_tim =  %s
-    """
-    cursor.execute(query_get_jabatan,(tim1,))
-    results = cursor.fetchall()
+    WHERE p.nama_tim = '%s'
+    """ %(tim1))
+    # cursor.execute(query_get_jabatan,(tim1,))
+    # results = cursor.fetchall()
     # print(results)
     return results
 
