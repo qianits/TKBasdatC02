@@ -11,6 +11,8 @@ from manajer.models import *
 
 def dashboard_manajer(request):
     username = request.session.get('username')
+    print("masuk")
+    print(username)
 
     db_connection = psycopg2.connect(
             host="localhost",
@@ -73,7 +75,6 @@ def get_tim(cursor, id: str):
     """
     cursor.execute(query_get_status,(id,))
     results = cursor.fetchall()
-    return results[0][0]
     if len(results) == 0:
         return "Belum membuat tim"
     else:
