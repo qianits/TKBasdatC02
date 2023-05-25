@@ -30,12 +30,12 @@ def dashboard_panitia(request):
 
     if info_rapat != None:
 
-        print(info_rapat)
+        # print(info_rapat)
         list_of_id_pertandingan = [x[0] for x in info_rapat]
         list_of_datetime = [x[1] for x in info_rapat]
         list_of_isi_rapat = [x[5] for x in info_rapat]
 
-        print(list_of_id_pertandingan)
+        # print(list_of_id_pertandingan)
         
     
 
@@ -58,7 +58,7 @@ def dashboard_panitia(request):
         tup2 = [(item,) for item in list_of_datetime]
         tup3 = [(item,) for item in list_of_isi_rapat]
 
-        print(tup1)
+        # print(tup1)
 
         data = list(zip(tup1, tup2, list_of_tim_manajer_1, list_of_tim_manajer_2, tup3))
 
@@ -163,12 +163,21 @@ def panitia_manage_pertandingan(request):
     )
     cursor = db_connection.cursor()
     cursor.execute("set search_path to uleague")
-    list_pertandingan = get_list_skor(cursor)
+    list_skor = get_list_skor(cursor)
     list_pertandingan = get_list_pertandingan(cursor)
     context['pertandingan'] = list_pertandingan
-    context['hasil_akhir'] = list_pertandingan
-    context['grup'] = [('Grup A'), ('Grup B'), ('Grup C'), ('Grup D')]
+    context['hasil_akhir'] = list_skor
+    context['grup'] = [['Grup A',[]], ['Grup B',[]], ['Grup C',[]], ['Grup D',[]]]
+    pointer = 0
+    # print(len(context['pertandingan']))
+    # print((context['pertandingan']))
 
+    for pertandingan in context['pertandingan']:
+        if len(context['grup'][pointer][1]) == 4:
+            pointer += 1
+        context['grup'][pointer][1] += [pertandingan]
+
+    print(context['grup'])
     db_connection.close()
     return render(request, 'manage_pertandingan.html', context=context)
 
@@ -191,7 +200,7 @@ def get_list_skor(cursor):
     """
     list_skor = cursor.execute(query_get_list,)
     list_skor = cursor.fetchall()
-    print(list_skor)
+    # print(list_skor)
     return list_skor
 
 def get_list_pertandingan(cursor):
@@ -205,7 +214,7 @@ def get_list_pertandingan(cursor):
     """
     list_pertandingan = cursor.execute(query_get_list,)
     list_pertandingan = cursor.fetchall()
-    print(list_pertandingan)
+    # print(list_pertandingan)
     return list_pertandingan
 
 def crt_mulai_rapat():

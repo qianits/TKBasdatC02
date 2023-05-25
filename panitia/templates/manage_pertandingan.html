@@ -70,20 +70,22 @@
                       <tbody id="data-body">
                         {% for z in grup %}
                         <tr>
-                          <td rowspan="4">sss</td>
-                          {% for i in pertandingan %}
-                          
+                          <td class="align-content-center text-center align-items-center" rowspan="5">{{ z.0 }}</td>
+                          {% for i in z.1 %}
+                          <tr>
                           <td>{{ i.0 }}</td>
-                          <td>{{ i.1 }}</td>
+                          <td>{{ i.2 }}</td>
                           <td>{{ i.0 }}</td>
                           <td>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTimA">Peristiwa Tim
-                              A</button><button class="btn btn-primary" data-toggle="modal"
-                              data-target="#modalTimB">Peristiwa Tim B
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTimA">
+                              Peristiwa Tim A
+                            </button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTimB">
+                              Peristiwa Tim B
                             </button>
                           </td>
+                        </tr>
                           {% endfor %}
-                              
                         </tr>
                         {% endfor %}
                       </tbody>
@@ -241,9 +243,6 @@
                         emptyMessage.style.display = "none";
                       }
                     }
-
-                                  // Memanggil fungsi untuk menampilkan data pertama kali
-                                  // showData();
                   </script>
               </div>
             </div>
@@ -251,8 +250,5 @@
         </div>
       </div>
   </section>
-
-  <!-- Tambahkan skrip Bootstrap dan jQuery -->
-  <!-- Tambahkan skrip Bootstrap dan jQuery -->
 </body>
 {% endblock content %}
