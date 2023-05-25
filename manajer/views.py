@@ -84,15 +84,6 @@ def get_tim(cursor, id: str):
     else:
         return results[0][0]
 
-def read_peminjaman_stadium():
-    return
-
-def crt_peminjaman_stadium():
-    return
-
-def del_peminjaman_stadium():
-    return
-
 #Bagian Mengelola Tim
 def registrasi_tim(request):
     if request.method == 'POST':
@@ -230,3 +221,42 @@ def notulensi(request, id):
     """ %(id))
     context['notul'] = notul
     return render(request, 'notulensi_rapat.html', context)
+
+from django.shortcuts import render
+from django.db import connection
+
+def peminjaman_stadium(request):
+    if request.method == 'POST':
+        stadium_id = request.POST.get('stadium_id')
+        tanggal = request.POST.get('tanggal')
+        waktu_peminjaman = request.POST.get('waktu_peminjaman')
+
+        # Simpan peminjaman ke database
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO Peminjaman (ID_Manajer, Start_Datetime, End_Datetime, ID_Stadium) VALUES (%s, %s, %s, %s)", [manajer_id, waktu_peminjaman, waktu_peminjaman, stadium_id])
+
+        return render(request, 'peminjaman_stadium.html')
+
+    else:
+        # Mendapatkan daftar stadium yang telah dipesan
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT stadium.nama, peminjaman.start_datetime, peminjaman.end_datetime FROM stadium INNER JOIN peminjaman ON stadium.id_stadium = peminjaman.id_stadium")
+            result = cursor.fetchall()
+
+        context = {
+            'pemesanan': result
+        }
+
+        return render(request, 'peminjaman_stadium.html', context)
+
+def pilih_waktu(request, stadium_id, tanggal):
+    # Mendapatkan daftar waktu yang tersedia untuk stadium dan tanggal tertentu
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT waktu FROM waktu_stadium WHERE stadium_id = %s AND tanggal = %s", [stadium_id, tanggal])
+        result = cursor.fetchall()
+
+    context = {
+        'waktu': result
+    }
+
+    return render(request, 'list_waktu_stadium.html', context)
