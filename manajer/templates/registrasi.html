@@ -21,22 +21,18 @@
 </head>
 <body>
 <div class="container mt-5">
-  <h1 class="text-center mb-4">🧾 Pembelian Tiket</h1>
+  <h1 class="text-center mb-4">Form Registrasi</h1>
   <div class="container container-shadow p-5">
 <!-- start form -->
 <form method="POST" action="">
   {% csrf_token %}
   <div class="form-group" style="margin-bottom: 20px;">
-    <label for="dropdown">Pilih Stadium:</label>
-    <select class="form-control" id="dropdown" name="nama_stadium">
-        {% for stadium in stadiums %}
-        <option value="{{ stadium.nama }}">{{ stadium.nama }}</option>
-        {% endfor %}
-    </select>
+    <label for="dropdown">Nama Tim:</label>
+        <input type="text" id="nama_tim" name="nama_tim">
   </div>
   <div class="form-group" style="margin-bottom: 20px;">
-    <label for="calendar">Enter a date:</label>
-    <input type="date" class="form-control" id="calendar" name="date">
+    <label for="calendar">Nama Universitas:</label>
+    <input type="text" id="nama_universitas" name="nama_universitas">
   </div>
   <div class="text-center">
     <button type="submit" class="btn btn-primary">Next</button>

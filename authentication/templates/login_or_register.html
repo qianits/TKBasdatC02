@@ -48,6 +48,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <b>Silahkan pilih role kamu!</b>
+          <br></br>
           <form method="post" action="{% url 'authentication:register' %}">
             {% csrf_token %}
             <div class="d-grid gap-2 col-6 mx-auto">
@@ -69,12 +71,21 @@
 <!-- ULeague - 2 Login or Register -->
 <section class="vh-100" style="background-color: lightblue;">
     <div class="container py-5 h-100">
+      <h1 class="text-center">⚽️ Selamat Datang di U-League! ⚽️</h1>
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          
+          
+          <ul></ul>
+          <ul></ul>
+          <ul></ul>
+          <ul></ul>
+          <ul></ul>
+
           <div class="card shadow-2-strong" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
   
-              <h3 class="mb-5">U League - 2</h3>
+              <h4 class="mb-5">Silahkan login atau register</h4>
 
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LoginPopup">
                 Login 
