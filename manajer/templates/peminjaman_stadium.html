@@ -21,20 +21,13 @@
           <td align="center"><strong>Waktu</strong></td>
         </tr>
 
-        <tr align="center">
-          <td>Stadion Universitas Indonesia</td>
-          <td>2023-03-27 9:00:00</td>
+        {% for pemesanan in pemesanan %}
+        <tr>
+          <td>{{ pemesanan.0 }}</td>
+          <td>{{ pemesanan.1 }}</td>
+          <td></td>
         </tr>
-
-        <tr align="center">
-          <td>Stadion IPB</td>
-          <td>2023-03-27 15:00:00</td>
-        </tr>
-
-        <tr align="center">
-          <td>Stadion Binus</td>
-          <td>2023-03-27 13:00:00</td>
-        </tr>
+        {% endfor %}
     </table>
   </div>
 </div>
@@ -59,16 +52,16 @@
 
             <!--DAFTARKAN PEMAIN BARU DENGAN DROPDOWN-->
               <label for="stadium"class="form-label" for="typeEmailX-2">Stadium</label>
-              <form>
-                <select id="pemain" name="pemain">
-                  <option value="1">Stadion Universitas Indonesia</option>
-                  <option value="2">Stadion IPB</option>
-                  <option value="3">Stadion Binus</option>
+              <form method="POST" action="/peminjaman/pesan">
+                <select name="stadium" id="stadium">
+                  {% for stadium in stadiums %}
+                  <option value="{{ stadium.id_stadium }}">{{ stadium.nama }}</option>
+                  {% endfor %}
                 </select>
-              </form><br>
+                <br>
               <label for="tanggal"class="form-label" for="typeEmailX-2">Tanggal</label>
               <form>
-                <input type="date" id="tanggal" name="stadium">
+                <input type="date" id="tanggal" name="tanggal">
               </form><br>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             <button type="button" class="btn btn-primary">Cari</button>
