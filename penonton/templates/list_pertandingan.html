@@ -1,4 +1,4 @@
-{% extends 'base_manajer.html' %}
+{% extends 'base_penonton.html' %}
 {% load static %}
 
 {% block meta %}
@@ -231,7 +231,7 @@
     {{ i.nama }}
     </div>
     <div class="cell" data-title="Tanggal dan Waktu">
-    {{ i.start_datetime }} - {{ i.waktu_akhir }}
+    {{ i.start_datetime }} - {{ i.waktuakhir }}
     </div>
     </div>
     {% endfor %}
