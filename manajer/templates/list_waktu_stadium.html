@@ -21,30 +21,27 @@
           <td align="center"><strong>Action</strong></td>
         </tr>
 
-        <tr align="center">
-          <td>9:00:00</td>
-          <td>
-            <button class="btn btn-primary" type="button">Pesan</button>
-          </td>
+        {% for waktu in waktu_stadium %}
+        <tr>
+          <td>{{ waktu }}</td>
+          <td><button type="button" class="pesan-button" data-waktu="{{ waktu }}">Pesan</button></td>
         </tr>
-
-        <tr align="center">
-          <td>12:00:00</td>
-          <td>
-            <button class="btn btn-primary" type="button">Pesan</button>
-          </td>
-        </tr>
-
-        <tr align="center">
-          <td>16:00:00</td>
-          <td>
-            <button class="btn btn-primary" type="button">Pesan</button>
-          </td>
-        </tr>
+        {% endfor %}
     </table>
   </div>
 </div>
 <br></br>
 </body>
 
+
+
+<script>
+  $(document).ready(function() {
+    $('.pesan-button').click(function() {
+      var waktu = $(this).data('waktu');
+      $('#waktu').val(waktu);
+      $('#pesanModal').modal('show');
+    });
+  });
+</script>
 {% endblock content %}
