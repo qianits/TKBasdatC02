@@ -202,7 +202,7 @@ def get_list_pertandingan(id_manajer, cursor):
 
 def history_rapat(request):
     # TODO: Ganti ID Manajer dengan ID manajer login
-    id_manajer = "63ede258-e39c-45b4-b8b8-8de9f8e891bd"
+    id_manajer = "6984f2a7-85e5-4d0d-9d40-79d7469276dd"
     context = {}
     db_connection = psycopg2.connect(
         host="localhost",
@@ -215,10 +215,6 @@ def history_rapat(request):
     hist_rapat = get_history_rapat(id_manajer, cursor)
     context['rapat'] = hist_rapat
     db_connection.close()
-    # if (request.method == 'POST'):
-    #     rapat = request.POST.get('rapat')
-    #     NotulensiTemp.objects.create(notulensi=rapat)
-    #     return HttpResponseRedirect(reverse("manajer:notulensi_rapat")) 
     return render(request, 'history_rapat.html', context=context)
 
 def get_history_rapat(id_manajer, cursor):
@@ -251,14 +247,27 @@ def get_history_rapat(id_manajer, cursor):
     list_rapat= cursor.fetchall()
     return list_rapat
 
-def notulensi_rapat(request):
-    context={}
-    # not_temps = NotulensiTemp.objects.all()
-    # not_list = [not_temp.notulensi for not_temp in not_temps]
+def notulensi(request, id):
+    context = {}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="qistina",
+        password="Qistina04"
+    )
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    notul = get_notul(cursor, id)
+    context['notul'] = notul
+    db_connection.close()
+    return render(request, 'notulensi_rapat.html', context)
 
-    # if len(not_list) > 0:
-    #     selected_not = not_list[-1]
-    # else:
-    #     selected_not = None  # Atau nilai default yang sesuai
-    # context['rapat'] = rapat
-    return render(request, 'notulensi_rapat.html')
+def get_notul(cursor, id):
+    query_get_list = """
+    SELECT isi_rapat
+    FROM Rapat
+    WHERE id_pertandingan = %s
+    """
+    selected_notul = cursor.execute(query_get_list,(id,))
+    selected_notul = cursor.fetchall()
+    return selected_notul
