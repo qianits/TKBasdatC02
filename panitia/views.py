@@ -1,7 +1,9 @@
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
 from django.db import connection
-
+from utils.query import *
 
 def dashboard_panitia(request):
     username = request.session.get('username')
@@ -30,12 +32,12 @@ def dashboard_panitia(request):
 
     if info_rapat != None:
 
-        print(info_rapat)
+        # print(info_rapat)
         list_of_id_pertandingan = [x[0] for x in info_rapat]
         list_of_datetime = [x[1] for x in info_rapat]
         list_of_isi_rapat = [x[5] for x in info_rapat]
 
-        print(list_of_id_pertandingan)
+        # print(list_of_id_pertandingan)
         
     
 
@@ -58,7 +60,7 @@ def dashboard_panitia(request):
         tup2 = [(item,) for item in list_of_datetime]
         tup3 = [(item,) for item in list_of_isi_rapat]
 
-        print(tup1)
+        # print(tup1)
 
         data = list(zip(tup1, tup2, list_of_tim_manajer_1, list_of_tim_manajer_2, tup3))
 
@@ -136,6 +138,165 @@ def get_list_of_tim_manajer(cursor, id: str):
     
     return tim_manajer
 
+def query(query_str: str):
+    hasil = []
+    with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+        cursor.execute("SET SEARCH_PATH TO ULEAGUE")
+        try:
+            cursor.execute(query_str)
+
+            if query_str.strip().lower().startswith("select"):
+                # Kalau ga error, return hasil SELECT
+                hasil = map_cursor(cursor)
+            else:
+                # Kalau ga error, return jumlah row yang termodifikasi oleh INSERT, UPDATE, DELETE
+                hasil = cursor.rowcount
+        except Exception as e:
+            # Ga tau error apa
+            hasil = e
+    return hasil
+
+
+def panitia_memulai_pertandingan(request, id):
+    # print(id)
+    id='01b0dec5-48b3-44d9-b1dd-b9903c33b1ff'
+    context = {}
+    # db_connection = psycopg2.connect(
+    #     host="localhost",
+    #     database="postgres",
+    #     user="postgres",
+    #     password="123"
+    # )
+    # cursor = db_connection.cursor()
+    # cursor.execute("set search_path to uleague")
+    tim_pertandingan = get_pertandingan(id)
+    # print(tim_pertandingan[1]['nama_tim'])
+    peristiwa = get_peristiwa(id)
+    pemain1 = get_pemain(tim_pertandingan[0]['nama_tim'])
+    pemain2 = get_pemain(tim_pertandingan[1]['nama_tim'])
+    context['tim_pertandingan'] = tim_pertandingan
+    context['peristiwa'] = peristiwa
+    context['tim1'] = pemain1
+    context['tim2'] = pemain2
+    # db_connection.close()
+    # print(pemain2)
+    
+    if (request.method == 'POST'):
+        pelaku1 = request.POST.get('pelaku1')
+        peristiwa1 = request.POST.get('peristiwa1')
+        id_pemain = query(f"""SELECT ID_Pemain
+        FROM Pemain
+        WHERE CONCAT(Nama_Depan, ' ', Nama_Belakang) = '%s'""" %(pelaku1))
+        query(f"""INSERT INTO peristiwa (id_pertandingan, datetime, jenis, id_pemain) VALUES 
+        (%s, CURRENT_TIMESTAMP, %s,  %s) """ %(id, pelaku1, peristiwa1, id_pemain))
+        
+    return render(request, 'mulai_pertandingan.html', context=context)
+
+
+def get_peristiwa( id: str):
+    results = query(f"""SELECT *
+    FROM Peristiwa
+    WHERE id_pertandingan = '%s'
+    """ %(id))
+    # cursor.execute(query_get_jabatan,(id,))
+    # results = cursor.fetchall()
+    return results
+
+def get_pertandingan( id: str):
+    results = query(f"""SELECT tp.ID_Pertandingan, tb.Nama_Tim 
+    FROM TIM_PERTANDINGAN tp
+    JOIN TIM tb ON tp.Nama_Tim = tb.Nama_Tim
+    WHERE tp.ID_pertandingan = '%s'
+    """ %(id))
+    # cursor.execute(query_get_jabatan,(id,))
+    # results = cursor.fetchall()
+    # print(results)
+    return results
+
+def get_pemain( tim1: str):
+    results = query(f"""SELECT ID_pemain, nama_depan, nama_belakang 
+    FROM Pemain p
+    WHERE p.nama_tim = '%s'
+    """ %(tim1))
+    # cursor.execute(query_get_jabatan,(tim1,))
+    # results = cursor.fetchall()
+    # print(results)
+    return results
+
+
+def panitia_manage_pertandingan(request):
+    context = {}
+    db_connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="123"
+    )
+    cursor = db_connection.cursor()
+    cursor.execute("set search_path to uleague")
+    list_skor = get_list_skor(cursor)
+    list_pertandingan = get_list_pertandingan(cursor)
+    context['pertandingan'] = list_pertandingan
+    context['hasil_akhir'] = list_skor
+    context['grup'] = [['Grup A',[]], ['Grup B',[]], ['Grup C',[]], ['Grup D',[]]]
+    pointer = 0
+    # print(len(context['pertandingan']))
+    # print((context['pertandingan']))
+
+    for pertandingan in context['pertandingan']:
+        if len(context['grup'][pointer][1]) == 4:
+            pointer += 1
+        context['grup'][pointer][1] += [pertandingan]
+
+    print(context['grup'])
+    db_connection.close()
+    return render(request, 'manage_pertandingan.html', context=context)
+
+def get_list_skor(cursor):
+    query_get_list = """
+    SELECT
+    p.id_pertandingan,
+    tp.nama_tim AS tim,
+    tp.skor
+    FROM
+    Pertandingan p
+    JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
+    WHERE
+    tp.skor = (
+        SELECT MAX(skor)
+        FROM Tim_Pertandingan
+        WHERE id_pertandingan = p.id_pertandingan
+    );
+
+    """
+    list_skor = cursor.execute(query_get_list,)
+    list_skor = cursor.fetchall()
+    # print(list_skor)
+    return list_skor
+
+def get_list_pertandingan(cursor):
+    query_get_list = """
+    SELECT string_agg(tp.nama_tim, ' vs ') as tim, s.nama, p.start_datetime, p.end_datetime::time as waktuakhir, p.id_pertandingan
+    FROM Pertandingan p
+    JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
+    JOIN Stadium s ON s.id_stadium = p.stadium
+    GROUP BY s.nama, p.start_datetime, p.id_pertandingan
+    ORDER BY p.start_datetime
+    """
+    list_pertandingan = cursor.execute(query_get_list,)
+    list_pertandingan = cursor.fetchall()
+    # print(list_pertandingan)
+    return list_pertandingan
+
+def crt_mulai_rapat():
+    return
+
+def read_mulai_rapat():
+    return
+def daftar_pertandingan(request):
+    pertandingan = Rapat.objects.all()
+    context = {'pertandingan': pertandingan}
+    return render(request, 'rapat_pertandingan.html', context)
 def pertandingan_list(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT p.id_pertandingan, t1.nama_tim, t2.nama_tim, s.nama, p.start_datetime, p.end_datetime FROM pertandingan p JOIN tim t1 ON t1.nama_tim = p.nama_tim_a JOIN tim t2 ON t2.nama_tim = p.nama_tim_b JOIN stadium s ON s.id_stadium = p.stadium")

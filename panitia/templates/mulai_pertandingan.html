@@ -1,0 +1,325 @@
+{% extends 'base_panitia.html' %}
+{% load static %}
+
+{% block meta %}
+
+<head>
+    <title>Mulai Pertandingan</title>
+    <!-- Tambahkan stylesheet Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+{% endblock meta %}
+
+{% block content %}
+
+<body>
+    <section style="background-color: lightblue; height: 955px;">
+        <div class="container py-5 h4 h-80">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <!-- <div class="col-12 col-md-8 col-lg-6 col-xl-8"> -->
+                <div class="card shadow-2-strong px-0" style="border-radius: 1rem;">
+                    <div class="card-header text-center pt-3" style="background-color: #508bfc; ">
+                        <h2>Informasi Peristiwa Pertandingan</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-body p-5 text-center pt-0">
+                            <div class="container mt-5">
+
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tim 1</th>
+                                            <th>Tim 2</th>
+                                            <th>Masukkan Peristiwa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{tim_pertandingan.0.nama_tim}}</td>
+                                            <td>{{tim_pertandingan.1.nama_tim}}</td>
+                                            <td>
+                                                <button class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#peristiwaModal1">Masukkan Peristiwa Tim 1</button>
+                                                <button class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#peristiwaModal2">Masukkan Peristiwa Tim 2</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+
+                                <!-- Modal Form Peristiwa -->
+                                <div class="modal fade" id="peristiwaModal1" tabindex="-1" role="dialog"
+                                    aria-labelledby="peristiwaModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #508bfc; ">
+                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.0.nama_tim}}
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="background-color: lightblue; ">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Pemain</th>
+                                                            <th>Peristiwa</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku6">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa6">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku7">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa7">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku8">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa8">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku9">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa9">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku10">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa10">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <button type="button" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="peristiwaModal2" tabindex="-1" role="dialog"
+                                    aria-labelledby="peristiwaModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #508bfc; ">
+                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.1.nama_tim}}
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="background-color: lightblue; ">
+                                                <form method="post" action="">
+                                                {% csrf_token %}
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Pemain</th>
+                                                            <th>Peristiwa</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku1">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option value={{pemain.id_pemain}}>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa1">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku2">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa2">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku3">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa3">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku4">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa4">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="pelaku5">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="peristiwa5">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- Tambahkan skrip Bootstrap dan jQuery -->
+    <!-- Tambahkan skrip Bootstrap dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+{% endblock content %}
