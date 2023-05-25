@@ -14,6 +14,7 @@ from penonton.models import *
 ### UNTUK CR Pembelian_Tiket
 def dashboard_penonton(request):
     username = request.session.get('username')
+    print("masuk")
     
     # Ini sesuain sama local postgresql lu
     db_connection = psycopg2.connect(

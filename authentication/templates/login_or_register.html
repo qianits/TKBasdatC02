@@ -48,6 +48,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <b>Silahkan pilih role kamu!</b>
+          <br></br>
           <form method="post" action="{% url 'authentication:register' %}">
             {% csrf_token %}
             <div class="d-grid gap-2 col-6 mx-auto">
