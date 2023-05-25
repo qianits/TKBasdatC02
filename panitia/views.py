@@ -136,7 +136,27 @@ def get_list_of_tim_manajer(cursor, id: str):
     
     return tim_manajer
 
-def panitia_memulai_pertandingan(request):
+def query(query_str: str):
+    hasil = []
+    with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+        cursor.execute("SET SEARCH_PATH TO ULEAGUE")
+        try:
+            cursor.execute(query_str)
+
+            if query_str.strip().lower().startswith("select"):
+                # Kalau ga error, return hasil SELECT
+                hasil = map_cursor(cursor)
+            else:
+                # Kalau ga error, return jumlah row yang termodifikasi oleh INSERT, UPDATE, DELETE
+                hasil = cursor.rowcount
+        except Exception as e:
+            # Ga tau error apa
+            hasil = e
+    return hasil
+
+
+def panitia_memulai_pertandingan(request, id):
+    print(id)
     context = {}
     db_connection = psycopg2.connect(
         host="localhost",
@@ -146,11 +166,47 @@ def panitia_memulai_pertandingan(request):
     )
     cursor = db_connection.cursor()
     cursor.execute("set search_path to uleague")
-    list_pertandingan = get_list_pertandingan(cursor)
-    context['pertandingan'] = list_pertandingan
+    tim_pertandingan = get_pertandingan(cursor, id)
+    peristiwa = get_peristiwa(cursor, id)
+    pemain1 = get_pemain(cursor, tim_pertandingan[0][1])
+    pemain2 = get_pemain(cursor, tim_pertandingan[1][1])
+    context['tim_pertandingan'] = tim_pertandingan
+    context['peristiwa'] = peristiwa
+    context['tim1'] = pemain1
+    context['tim2'] = pemain2
     db_connection.close()
+    print(tim_pertandingan[0][1])
     return render(request, 'mulai_pertandingan.html', context=context)
 
+def get_peristiwa(cursor, id: str):
+    query_get_jabatan = """SELECT *
+    FROM Peristiwa
+    WHERE id_pertandingan = %s
+    """
+    cursor.execute(query_get_jabatan,(id,))
+    results = cursor.fetchall()
+    return results
+
+def get_pertandingan(cursor, id: str):
+    query_get_jabatan = """SELECT tp.ID_Pertandingan, tb.Nama_Tim 
+    FROM TIM_PERTANDINGAN tp
+    JOIN TIM tb ON tp.Nama_Tim = tb.Nama_Tim
+    WHERE tp.ID_pertandingan =  %s
+    """
+    cursor.execute(query_get_jabatan,(id,))
+    results = cursor.fetchall()
+    # print(results)
+    return results
+
+def get_pemain(cursor, tim1: str):
+    query_get_jabatan = """SELECT ID_pemain, nama_depan, nama_belakang 
+    FROM Pemain p
+    WHERE p.nama_tim =  %s
+    """
+    cursor.execute(query_get_jabatan,(tim1,))
+    results = cursor.fetchall()
+    # print(results)
+    return results
 
 
 def panitia_manage_pertandingan(request):

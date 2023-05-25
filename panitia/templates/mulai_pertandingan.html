@@ -36,13 +36,13 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Tim A</td>
-                                            <td>Tim B</td>
+                                            <td>{{tim_pertandingan.0.1}}</td>
+                                            <td>{{tim_pertandingan.1.1}}</td>
                                             <td>
                                                 <button class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#peristiwaModal">Masukkan Peristiwa Tim 1</button>
+                                                    data-target="#peristiwaModal1">Masukkan Peristiwa Tim 1</button>
                                                 <button class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#peristiwaModal">Masukkan Peristiwa Tim 2</button>
+                                                    data-target="#peristiwaModal2">Masukkan Peristiwa Tim 2</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -51,7 +51,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>
 
                                 <!-- Modal Form Peristiwa -->
-                                <div class="modal fade" id="peristiwaModal" tabindex="-1" role="dialog"
+                                <div class="modal fade" id="peristiwaModal1" tabindex="-1" role="dialog"
                                     aria-labelledby="peristiwaModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -76,9 +76,9 @@
                                                             <td>
                                                                 <select class="form-control">
                                                                     <option>None</option>
-                                                                    <option>Pemain A1</option>
-                                                                    <option>Pemain A2</option>
-                                                                    <option>Pemain A3</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -95,9 +95,9 @@
                                                             <td>
                                                                 <select class="form-control">
                                                                     <option>None</option>
-                                                                    <option>Pemain A1</option>
-                                                                    <option>Pemain A2</option>
-                                                                    <option>Pemain A3</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -114,9 +114,9 @@
                                                             <td>
                                                                 <select class="form-control">
                                                                     <option>None</option>
-                                                                    <option>Pemain A1</option>
-                                                                    <option>Pemain A2</option>
-                                                                    <option>Pemain A3</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -133,9 +133,9 @@
                                                             <td>
                                                                 <select class="form-control">
                                                                     <option>None</option>
-                                                                    <option>Pemain A1</option>
-                                                                    <option>Pemain A2</option>
-                                                                    <option>Pemain A3</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -152,9 +152,9 @@
                                                             <td>
                                                                 <select class="form-control">
                                                                     <option>None</option>
-                                                                    <option>Pemain A1</option>
-                                                                    <option>Pemain A2</option>
-                                                                    <option>Pemain A3</option>
+                                                                    {% for pemain in tim1 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -178,7 +178,133 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="modal fade" id="peristiwaModal2" tabindex="-1" role="dialog"
+                                    aria-labelledby="peristiwaModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #508bfc; ">
+                                                <h5 class="modal-title" id="peristiwaModalLabel">Pilih Peristiwa {{tim_pertandingan.1.1}}
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="background-color: lightblue; ">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Pemain</th>
+                                                            <th>Peristiwa</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    {% for pemain in tim2 %}
+                                                                    <option>{{pemain.1}} {{pemain.2}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control">
+                                                                    <option>None</option>
+                                                                    <option>Gol</option>
+                                                                    <option>Kartu Kuning</option>
+                                                                    <option>Kartu Merah</option>
+                                                                    <option>Assist</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <button type="button" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
