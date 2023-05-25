@@ -5,6 +5,7 @@ import locale
 import uuid
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
+from utils.query import *
 locale.setlocale(locale.LC_ALL, '')
 
 from penonton.models import *
@@ -144,55 +145,27 @@ def get_nama_stadion(cursor, id: str):
 
 ### UNTUK CR Pembelian_Tiket
 def pembelian_tiket(request):
-    context = {}
-    db_connection = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="qistina",
-        password="Qistina04"
-    )
-    cursor = db_connection.cursor()
-    
-    cursor.execute("set search_path to uleague")
-    cursor.execute("select * from stadium")
-    stadiums = cursor.fetchall()
+    context ={}
+    stadiums = query("select * from stadium")
     context['stadiums'] = stadiums
-    db_connection.close()
     if (request.method == 'POST'):
         nama_stadium = request.POST.get('nama_stadium')
         selected_date = request.POST.get('date')
+        print(nama_stadium)
         StadiumTemp.objects.create(nama_stadium=nama_stadium, tanggal=selected_date)
         return HttpResponseRedirect(reverse("penonton:pilih_pertandingan")) 
     return render(request, 'pembelian_tiket.html', context=context)
-
-def get_pertandingan(nama_stadium, selected_date, cursor):
-    query_get_waktu = """
-    SELECT ut.tim_a, ut.tim_b, ut.nama, ut.waktuawal, ut.waktuakhir, ut.id_pertandingan AS idp
-    FROM (
-    SELECT tp1.nama_tim as tim_a, tp2.nama_tim as tim_b, s.nama, p.start_datetime::time AS waktuawal, p.end_datetime::time AS waktuakhir, p.id_pertandingan,
-    ROW_NUMBER() OVER (PARTITION BY p.id_pertandingan ORDER BY p.start_datetime) AS row_num
-    FROM Pertandingan p
-    JOIN Tim_Pertandingan tp1 ON p.id_pertandingan = tp1.id_pertandingan
-    JOIN Tim_Pertandingan tp2 ON p.id_pertandingan = tp2.id_pertandingan
-    JOIN Stadium s ON s.id_stadium = p.stadium
-    WHERE tp1.nama_tim <> tp2.nama_tim AND s.nama = %s AND TO_CHAR(start_datetime, 'YYYY-MM-DD') LIKE %s) AS ut
-    WHERE row_num = 1
-    ORDER BY waktuawal
-    """
-    list_waktu = cursor.execute(query_get_waktu, (nama_stadium, selected_date))
-    list_waktu = cursor.fetchall()
-    return list_waktu
 
 def pilih_pertandingan(request):
     stadium_temps = StadiumTemp.objects.all()
     tanggal_list = [stadium_temp.tanggal for stadium_temp in stadium_temps]
     stadium_list = [stadium_temp.nama_stadium for stadium_temp in stadium_temps]
 
+    print(stadium_list[-1])
     context={}
     nilai_var = "Nilai Default"  # Nilai default jika variabel tidak ditemukan dalam POST request
     if request.method == 'POST':
         nilai_var = request.POST.get('nilai_var')  # Mengambil nilai variabel dari POST request
-        print(nilai_var)
 
     if len(tanggal_list) > 0:
         selected_date = tanggal_list[-1]
@@ -204,20 +177,23 @@ def pilih_pertandingan(request):
     else:
         nama_stadium = None  # Atau nilai default yang sesuai
 
-    db_connection = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="qistina",
-        password="Qistina04"
-    )
-    cursor = db_connection.cursor()
-    cursor.execute("set search_path to uleague")
-    list_waktu_stadium = get_pertandingan(nama_stadium, selected_date, cursor)
+    list_waktu_stadium = query("""
+    SELECT ut.tim_a, ut.tim_b, ut.nama, ut.waktuawal, ut.waktuakhir, ut.id_pertandingan AS idp
+    FROM (
+    SELECT tp1.nama_tim as tim_a, tp2.nama_tim as tim_b, s.nama, p.start_datetime::time AS waktuawal, p.end_datetime::time AS waktuakhir, p.id_pertandingan,
+    ROW_NUMBER() OVER (PARTITION BY p.id_pertandingan ORDER BY p.start_datetime) AS row_num
+    FROM Pertandingan p
+    JOIN Tim_Pertandingan tp1 ON p.id_pertandingan = tp1.id_pertandingan
+    JOIN Tim_Pertandingan tp2 ON p.id_pertandingan = tp2.id_pertandingan
+    JOIN Stadium s ON s.id_stadium = p.stadium
+    WHERE tp1.nama_tim <> tp2.nama_tim AND s.nama = "%s" AND TO_CHAR(start_datetime, 'YYYY-MM-DD') LIKE %s) AS ut
+    WHERE row_num = 1
+    ORDER BY waktuawal""" %(nama_stadium, selected_date))
+    print(list_waktu_stadium)
     context = {"waktu" : list_waktu_stadium,
                 "nama_stadium" : nama_stadium,
                 'tanggal': selected_date,
-                'nilai_var': nilai_var,}
-    db_connection.close()
+                'nilai_var': nilai_var}
     if (request.method == 'POST'):
         id_pertandingan = request.POST.get('id_pertandingan')
         PertandinganTemp.objects.create(id_pertandingan=id_pertandingan)
@@ -263,28 +239,14 @@ def create_pembelian_tiket(receipt, id_penonton, jenis_tiket, jenis_pembayaran, 
 ### UNTUK R LIST PERTANDINGAN
 def list_pertandingan(request):
     context = {}
-    db_connection = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="qistina",
-        password="Qistina04"
-    )
-    cursor = db_connection.cursor()
-    cursor.execute("set search_path to uleague")
-    list_tanding = get_list_pertandingan(cursor)
-    context['pertandingan'] = list_tanding
-    db_connection.close()
-    return render(request, 'list_pertandingan.html', context=context)
-
-def get_list_pertandingan(cursor):
-    query_get_list = """
+    list_tanding = query("""
     SELECT string_agg(tp.nama_tim, ' vs ') as tim, s.nama, p.start_datetime, p.end_datetime::time as waktuakhir,  p.id_pertandingan
     FROM Pertandingan p
     JOIN Tim_Pertandingan tp ON p.id_pertandingan = tp.id_pertandingan
     JOIN Stadium s ON s.id_stadium = p.stadium
     GROUP BY s.nama, p.start_datetime, p.id_pertandingan
     ORDER BY p.start_datetime
-    """
-    list_tanding = cursor.execute(query_get_list,)
-    list_tanding = cursor.fetchall()
-    return list_tanding
+    """)
+    print(list_tanding)
+    context['pertandingan'] = list_tanding
+    return render(request, 'list_pertandingan.html', context=context)

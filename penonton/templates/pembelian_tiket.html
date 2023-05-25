@@ -30,7 +30,7 @@
     <label for="dropdown">Pilih Stadium:</label>
     <select class="form-control" id="dropdown" name="nama_stadium">
         {% for stadium in stadiums %}
-        <option value="{{ stadium.1 }}">{{ stadium.1 }}</option>
+        <option value="{{ stadium.nama }}">{{ stadium.nama }}</option>
         {% endfor %}
     </select>
   </div>

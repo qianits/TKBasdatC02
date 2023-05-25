@@ -38,12 +38,11 @@
         {% for i in waktu %}
         <tbody>
           <tr>
-            <td>{{i.0}}</td>
-            <td>{{i.1}}</td>
-            <td>{{i.3}} - {{i.4}}</td>
+            <td>{{i.tim_a}}</td>
+            <td>{{i.tim_b}}</td>
+            <td>{{i.waktuawal}} - {{i.waktuakhir}}</td>
             <td><button type="button" class="btn btn-link" onclick="window.location.href='../../penonton/beli_tiket/{{i.5}}'"> Pilih</button></td>
           </tr>
-        </form>
         </tbody>
         {% endfor %}
 
