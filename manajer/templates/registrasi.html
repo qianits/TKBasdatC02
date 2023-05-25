@@ -1,0 +1,48 @@
+{% extends 'base_penonton.html' %}
+<!DOCTYPE html>
+
+{% load static %}
+
+{% block meta %}
+<title>Pembelian Tiket</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+<style>
+  /* Add styles for the container with shadow and blur */
+  .container-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Form Registrasi</h1>
+  <div class="container container-shadow p-5">
+<!-- start form -->
+<form method="POST" action="">
+  {% csrf_token %}
+  <div class="form-group" style="margin-bottom: 20px;">
+    <label for="dropdown">Nama Tim:</label>
+        <input type="text" id="nama_tim" name="nama_tim">
+  </div>
+  <div class="form-group" style="margin-bottom: 20px;">
+    <label for="calendar">Nama Universitas:</label>
+    <input type="text" id="nama_universitas" name="nama_universitas">
+  </div>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary">Next</button>
+  </div>
+</form>
+<!-- end form -->
+  </div>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}
