@@ -14,7 +14,7 @@
 
 <body>
     <section style="background-color: lightblue; height: 955px;">
-        <div class="container py-5 h4 h-100">
+        <div class="container py-5 h4 h-80">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <!-- <div class="col-12 col-md-8 col-lg-6 col-xl-8"> -->
                 <div class="card shadow-2-strong px-0" style="border-radius: 1rem;">
@@ -74,7 +74,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku6">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -82,7 +82,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa6">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -93,7 +93,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku7">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -101,7 +101,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa7">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -112,7 +112,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku8">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -120,7 +120,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa8">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -131,7 +131,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku9">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -139,7 +139,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa9">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -150,7 +150,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku10">
                                                                     <option>None</option>
                                                                     {% for pemain in tim1 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -158,7 +158,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa10">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -191,6 +191,8 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body" style="background-color: lightblue; ">
+                                                <form method="post" action="">
+                                                {% csrf_token %}
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
@@ -201,15 +203,15 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku1">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
-                                                                    <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
+                                                                    <option value={{pemain.id_pemain}}>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa1">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -220,7 +222,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku2">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -228,7 +230,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa2">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -239,7 +241,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku3">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -247,7 +249,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa3">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -258,7 +260,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku4">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -266,7 +268,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa4">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -277,7 +279,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="pelaku5">
                                                                     <option>None</option>
                                                                     {% for pemain in tim2 %}
                                                                     <option>{{pemain.nama_depan}} {{pemain.nama_belakang}}</option>
@@ -285,7 +287,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="peristiwa5">
                                                                     <option>None</option>
                                                                     <option>Gol</option>
                                                                     <option>Kartu Kuning</option>
@@ -296,12 +298,14 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                            
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Batal</button>
-                                                <button type="button" class="btn btn-primary">Simpan</button>
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
                                             </div>
+                                        </form>
                                         </div>
                                     </div>
                                 </div>

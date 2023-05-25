@@ -1,3 +1,5 @@
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 import psycopg2
 from django.db import connection
@@ -157,6 +159,7 @@ def query(query_str: str):
 
 def panitia_memulai_pertandingan(request, id):
     # print(id)
+    id='01b0dec5-48b3-44d9-b1dd-b9903c33b1ff'
     context = {}
     # db_connection = psycopg2.connect(
     #     host="localhost",
@@ -176,7 +179,17 @@ def panitia_memulai_pertandingan(request, id):
     context['tim1'] = pemain1
     context['tim2'] = pemain2
     # db_connection.close()
-    print(pemain2)
+    # print(pemain2)
+    
+    if (request.method == 'POST'):
+        pelaku1 = request.POST.get('pelaku1')
+        peristiwa1 = request.POST.get('peristiwa1')
+        id_pemain = query(f"""SELECT ID_Pemain
+        FROM Pemain
+        WHERE CONCAT(Nama_Depan, ' ', Nama_Belakang) = '%s'""" %(pelaku1))
+        query(f"""INSERT INTO peristiwa (id_pertandingan, datetime, jenis, id_pemain) VALUES 
+        (%s, CURRENT_TIMESTAMP, %s,  %s) """ %(id, pelaku1, peristiwa1, id_pemain))
+        
     return render(request, 'mulai_pertandingan.html', context=context)
 
 
