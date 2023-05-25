@@ -1,0 +1,35 @@
+{% extends 'base_penonton.html' %}
+<!DOCTYPE html>
+
+{% load static %}
+
+{% block meta %}
+<title>List Pertandingan</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+<style>
+  /* Add styles for the container with shadow and blur */
+  .container-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(5px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+</style>
+</head>
+<body style="margin-bottom: 100px;">
+<div class="container mt-5">
+<div class="container container-shadow p-5">
+<h2 class="text-center mb-4">Isi Rapat 📃</h2>
+{% for i in notul %}
+<div class="text-center">
+  <td>{{i.0}}</td>
+</div>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>
+{% endblock content %}

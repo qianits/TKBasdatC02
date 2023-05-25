@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block meta %}
-<title>Pembelian Tiket</title>
+<title>Beli Tiket</title>
 {% endblock meta %}
 
 {% block content %}
@@ -21,25 +21,29 @@
 </head>
 <body>
 <div class="container mt-5">
-  <h1 class="text-center mb-4">🧾 Pembelian Tiket</h1>
+  <h1 class="text-center mb-4">🧾 Beli Tiket</h1>
   <div class="container container-shadow p-5">
 <!-- start form -->
 <form method="POST" action="">
-  {% csrf_token %}
+    {% csrf_token %}
   <div class="form-group" style="margin-bottom: 20px;">
-    <label for="dropdown">Pilih Stadium:</label>
-    <select class="form-control" id="dropdown" name="nama_stadium">
-        {% for stadium in stadiums %}
-        <option value="{{ stadium.1 }}">{{ stadium.1 }}</option>
+    <label for="dropdown">Jenis Tiket:</label>
+    <select class="form-control" id="dropdown" name="jenis_tiket">
+        {% for i in tiket %}
+        <option value="{{ i }}">{{ i }}</option>
         {% endfor %}
     </select>
   </div>
   <div class="form-group" style="margin-bottom: 20px;">
-    <label for="calendar">Enter a date:</label>
-    <input type="date" class="form-control" id="calendar" name="date">
+    <label for="calendar">Pembayaran:</label>
+    <select class="form-control" id="dropdown" name="jenis_pembayaran">
+        {% for j in pembayaran %}
+        <option value="{{ j }}">{{ j }}</option>
+        {% endfor %}
+    </select>
   </div>
   <div class="text-center">
-    <button type="submit" class="btn btn-primary">Next</button>
+    <button type="submit" class="btn btn-primary">Beli</button>
   </div>
 </form>
 <!-- end form -->

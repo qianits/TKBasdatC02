@@ -22,3 +22,7 @@ class Pelatih(models.Model):
     alamat = models.CharField(max_length=255)
     spesialisasi = models.CharField(max_length=50)
     tim = models.ForeignKey(Tim, on_delete=models.CASCADE, related_name='pelatih')
+
+class NotulensiTemp(models.Model):
+    notulensi = models.TextField()
+
