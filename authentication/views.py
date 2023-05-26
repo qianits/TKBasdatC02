@@ -6,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 import psycopg2
 from django.contrib.auth import logout
+from utils.query import query
+
 
 
 def authentication(request):
@@ -30,7 +32,7 @@ def register(request):
     
     return render(request, 'register.html')
 
-
+@csrf_exempt
 def register_manajer_penonton(request):
 
     if request.method =='POST':
@@ -47,16 +49,6 @@ def register_manajer_penonton(request):
         generated_uuid = uuid.uuid4()
         uuid_string = str(generated_uuid)
 
-        db_connection = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="123"
-        )
-
-        cursor = db_connection.cursor()
-        cursor.execute("set search_path to ULeague")
-
         if reg_role == 'manajer':
             # Insert manajer:
             # tabel yang terlibat:
@@ -66,13 +58,11 @@ def register_manajer_penonton(request):
             # - Manajer
 
             try:
-                insert_user_system(cursor, username, password)
-                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
-                insert_status_non_pemain(cursor, uuid_string,status)
-                insert_manajer(cursor, uuid_string, username)
+                insert_user_system(username, password)
+                insert_non_pemain(uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(uuid_string,status)
+                insert_manajer(uuid_string, username)
                 
-                db_connection.commit()
-                db_connection.close()
             except psycopg2.errors.RaiseException as e:
                 error_message = str("Username sudah digunakan, mohon ganti username!")
                 return render(request, 'register_manajer_penonton.html', {'error': error_message})
@@ -89,13 +79,11 @@ def register_manajer_penonton(request):
             # - Penonton
 
             try:
-                insert_user_system(cursor, username, password)
-                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
-                insert_status_non_pemain(cursor, uuid_string,status)
-                insert_penonton(cursor, uuid_string, username)
+                insert_user_system(username, password)
+                insert_non_pemain(uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(uuid_string,status)
+                insert_penonton(uuid_string, username)
                 
-                db_connection.commit()
-                db_connection.close()
             except psycopg2.errors.RaiseException as e:
                 error_message = str("Username sudah digunakan, mohon ganti username!")
                 return render(request, 'register_manajer_penonton.html', {'error': error_message})
@@ -105,7 +93,7 @@ def register_manajer_penonton(request):
 
     return render(request, 'register_manajer_penonton.html')
     
-
+@csrf_exempt
 def register_panitia(request):
     if request.method =='POST':
         reg_role = request.session.get('reg_role')
@@ -122,16 +110,6 @@ def register_panitia(request):
         generated_uuid = uuid.uuid4()
         uuid_string = str(generated_uuid)
 
-        db_connection = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="123"
-        )
-
-        cursor = db_connection.cursor()
-        cursor.execute("set search_path to ULeague")
-
         if reg_role == 'panitia':
             # Insert panitia:
             # tabel yang terlibat:
@@ -141,13 +119,11 @@ def register_panitia(request):
             # - Panitia
 
             try:
-                insert_user_system(cursor, username, password)
-                insert_non_pemain(cursor, uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
-                insert_status_non_pemain(cursor, uuid_string,status)
-                insert_panitia(cursor, uuid_string,jabatan, username)
+                insert_user_system(username, password)
+                insert_non_pemain(uuid_string, nama_depan, nama_belakang, nomor_hp, email, alamat)
+                insert_status_non_pemain(uuid_string,status)
+                insert_panitia(uuid_string,jabatan, username)
                 
-                db_connection.commit()
-                db_connection.close()
             except psycopg2.errors.RaiseException as e:
                 error_message = str("Username sudah digunakan, mohon ganti username!")
                 return render(request, 'register_panitia.html', {'error': error_message})
@@ -157,49 +133,48 @@ def register_panitia(request):
         
     return render(request, 'register_panitia.html')
 
-def insert_user_system(cursor, username:str, password:str):
+def insert_user_system(username:str, password:str):
     # Insert username & password to USER_SYSTEM
-    query_insert_user_system = """INSERT INTO USER_SYSTEM (Username, Password) 
-    VALUES (%s,%s)
-    """
-    cursor.execute(query_insert_user_system,(username, password))
+    query(f"""INSERT INTO USER_SYSTEM (Username, Password) 
+    VALUES ('{username}', '{password}')
+    """)
+    print("Berhasil insert user_system")
 
-def insert_non_pemain(cursor,uuid_str:str, nama_depan:str, nama_belakang:str, nomor_hp:str, email:str, alamat:str):
+def insert_non_pemain(uuid_str:str, nama_depan:str, nama_belakang:str, nomor_hp:str, email:str, alamat:str):
     
     # Insert attribute ke tabel non_pemain
-    query_insert_non_pemain = """INSERT INTO NON_PEMAIN (ID, Nama_Depan, Nama_Belakang,
+    query(f"""INSERT INTO NON_PEMAIN (ID, Nama_Depan, Nama_Belakang,
     Nomor_HP, Email, Alamat) 
-    VALUES (%s,%s,%s,%s,%s,%s)
-    """
-    cursor.execute(query_insert_non_pemain,(uuid_str,nama_depan,nama_belakang,nomor_hp,email,alamat))
+    VALUES ('{uuid_str}', '{nama_depan}', '{nama_belakang}', '{nomor_hp}', '{email}', '{alamat}')
+    """)
+    print("Berhasil insert non_pemain")
     
-def insert_status_non_pemain(cursor,uuid_str:str,status:str):
+def insert_status_non_pemain(uuid_str:str,status:str):
     # Insert ID dan Role to tabel STATUS_NON_PEMAIN
-    query_insert_status = """INSERT INTO STATUS_NON_PEMAIN (ID_Non_Pemain, Status) 
-    VALUES (%s,%s)
-    """
-    cursor.execute(query_insert_status,(uuid_str, status))
+    query(f"""INSERT INTO STATUS_NON_PEMAIN (ID_Non_Pemain, Status) 
+    VALUES ('{uuid_str}', '{status}')
+    """)
+    print("Berhasil insert status_non_pemain")
 
-def insert_manajer(cursor,uuid_str:str,username:str):
+def insert_manajer(uuid_str:str,username:str):
     # Insert ID dan Username to tabel Manajer
-    query_insert_manajer = """INSERT INTO MANAJER (ID_Manajer, Username) 
-    VALUES (%s,%s)
-    """
-    cursor.execute(query_insert_manajer,(uuid_str, username))
+    query(f"""INSERT INTO MANAJER (ID_Manajer, Username) 
+    VALUES ('{uuid_str}', '{username}')
+    """ )
+    print("Berhasil insert manajer")
 
-def insert_penonton(cursor,uuid_str:str,username:str):
+def insert_penonton(uuid_str:str,username:str):
     # Insert ID dan Role to tabel Penonton
-    query_insert_penonton = """INSERT INTO PENONTON(ID_Penonton, Username) 
-    VALUES (%s,%s)
-    """
-    cursor.execute(query_insert_penonton,(uuid_str, username))
+    query(f"""INSERT INTO PENONTON(ID_Penonton, Username) 
+    VALUES ('{uuid_str}', '{username}')
+    """)
+    print("Berhasil insert penonton")
 
-def insert_panitia(cursor,uuid_str:str,jabatan:str,username:str):
+def insert_panitia(uuid_str:str,jabatan:str,username:str):
     # Insert ID dan Role to tabel Penonton
-    query_insert_penonton = """INSERT INTO PANITIA(ID_Panitia, Jabatan, Username) 
-    VALUES (%s,%s,%s)
-    """
-    cursor.execute(query_insert_penonton,(uuid_str,jabatan,username))
+    query(f"""INSERT INTO PANITIA(ID_Panitia, Jabatan, Username) 
+    VALUES ('{uuid_str}', '{jabatan}', '{username}')
+    """)
 
 
 
@@ -217,54 +192,49 @@ def is_authenticated(request):
         return False
 
 # Untuk mencari tahu Usernamenya itu masuk role yang mana
-def get_role(cursor, username: str, password: str):
+def get_role(username: str, password: str):
 
 
-    query_check_username_password = """select * from USER_SYSTEM 
-    where username = %s AND password = %s
-    """
-    cursor.execute(query_check_username_password,(username,password))
-    result = cursor.fetchall()
+    query_check_username_password = query(f"""select * from USER_SYSTEM 
+    where username = '%s' AND password = '%s'
+    """ %(username,password))
     
 
-
     # Cari role
-    if type(result) == list and len(result):
+    if len(query_check_username_password):
         # Search query satu persatu dari tiap role untuk mengetahui rolenya
 
         # Manajer
-        manajer_query = """select * from MANAJER 
-        where username = %s 
-        """
-        cursor.execute(manajer_query,(username,))
-        result = cursor.fetchall()
+        manajer_query = query(f"""select * from MANAJER 
+        where username = '%s'
+        """%(username))
 
-        if type(result) == list and len(result):
+        if len(manajer_query):
+            print(type(manajer_query))
+            print("Manajer")
             return "manajer"
 
 
         # Penonton
-        penonton_query = """select * from PENONTON 
-        where username = %s 
-        """
-        cursor.execute(penonton_query,(username,))
-        result = cursor.fetchall()
+        penonton_query = query(f"""select * from PENONTON 
+        where username = '%s' 
+        """%(username))
 
-        if type(result) == list and len(result):
+        if len(penonton_query):
+            print("penonton")
             return "penonton"
 
 
         # Panitia
-        panitia_query = """select * from PANITIA 
-        where username = %s 
-        """
-        cursor.execute(panitia_query,(username,))
-        result = cursor.fetchall()
+        panitia_query = query(f"""select * from PANITIA 
+        where username = '%s' 
+        """%(username))
 
-        if type(result) == list and len(result):
+        if len(panitia_query):
+            print("panitia")
             return "panitia"
 
-        return result
+        return query_check_username_password
 
 
 # Untuk mengambil session data
@@ -286,27 +256,18 @@ def login(request):
     #     return login_view(request)
 
     if (request.method == 'POST'):
-        db_connection = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="123"
-        )
 
-        cursor = db_connection.cursor()
-        cursor.execute("set search_path to ULeague")
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         try:
             
-            role = get_role(cursor, username,password)
+            role = get_role(username,password)
             request.session['role'] = role
             request.session['username'] = username
             
+            print(role)
 
-            db_connection.commit()
-            db_connection.close()
             # Redirect ke halaman sesuai role (jika berhasil)
             if role == "manajer":
                 return redirect(reverse("manajer:dashboard"), request=request)
@@ -318,10 +279,8 @@ def login(request):
                 return redirect("authentication:authentication")
             
         except Exception as e:
-            db_connection.rollback()
             messages.error(
                 request, 'Gagal mendaftar, mohon perika input anda dan coba lagi')
-            db_connection.close()
             return redirect('authentication:authentication')
 
 

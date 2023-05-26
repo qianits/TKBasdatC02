@@ -18,18 +18,19 @@
 
 <body style="background-color: #1D498C;">
 <!--INFORMASI PROFIL-->
+{% for i in data %}
 <section class="vh-0" style="background-color: lightblue;">
     <div class="container py-5 h-0">
       <div class="row d-flex justify-content-center h-10">
         <div class="col col-lg-6 mb-4 mb-lg-0">
           {% comment %} <div class="card mb-3" style="border-radius: .5rem;"> {% endcomment %}
-            <div class="card mb-3" style="width:100rem;">
+            <div class="card mb-3" style="width=100rem;">
             <div class="row g-0">
               <div class="col-md-4 gradient-custom text-center text-black"
                 style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
                 <img src="https://storage.needpix.com/rsynced_images/manager-312603_1280.png"
                   alt="Avatar" class="img-fluid my-5" style="width: 100px;" />
-                <h5>{{nama}}</h5>
+                <h5>{{i.2}}</h5>
                 <p>Panitia</p>
                 <i class="far fa-edit mb-5"></i>
               </div>
@@ -40,27 +41,27 @@
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Email</h6>
-                      <p class="text-muted">{{email}}</p>
+                      <p class="text-muted">{{i.4}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Nomor HP</h6>
-                      <p class="text-muted">{{no_hp}}</p>
+                      <p class="text-muted">{{i.3}}</p>
                     </div>
                   </div>
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Alamat</h6>
-                      <p class="text-muted">{{alamat}}</p>
+                      <p class="text-muted">{{i.5}}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Status</h6>
-                      <p class="text-muted">{{status}}</p>
+                      <p class="text-muted">{{i.6}}</p>
                     </div>
                   </div>
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Jabatan</h6>
-                      <p class="text-muted">{{jabatan}}</p>
+                      <p class="text-muted">{{i.0}}</p>
                     </div>
                   </div>
                 </div>
@@ -71,7 +72,7 @@
       </div>
     </div>
   </section>
-
+  {% endfor %}
   <ul></ul>
 
 <div class="container" align="center">
@@ -82,16 +83,16 @@
 
 
   <div class="container" >
-    {% for item in data %}
+    {% for item in data_rapat %}
     <div class="row g-3" >
         <div class="col-12 col-md-6 col-lg-4" >
             <div class="card" style="background-color: #f4f5f7;">
                 <div class="card-body">
-                    <p class="card-text"><b>ID_Pertandingan: </b> {{item.0.0}}</p>
-                    <p class="card-text"><b>Datetime: </b> {{ item.1.0}}</p>
-                    <p class="card-text"><b>Manajer {{item.2.0}}: </b> {{item.2.1}}</p>
+                    <p class="card-text"><b>ID_Pertandingan: </b> {{item.0}}</p>
+                    <p class="card-text"><b>Datetime: </b> {{ item.1}}</p>
                     <p class="card-text"><b>Manajer {{item.3.0}}: </b> {{item.3.1}}</p>
-                    <p class="card-text"><b>Isi Rapat: </b> {{item.4.0}}</p>
+                    <p class="card-text"><b>Manajer {{item.4.0}}: </b> {{item.4.1}}</p>
+                    <p class="card-text"><b>Isi Rapat: </b> {{item.2}}</p>
                 </div>
             </div>
         </div>
