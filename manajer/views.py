@@ -11,78 +11,78 @@ from manajer.models import *
 from utils.query import *
 
 def dashboard_manajer(request):
-    context={}
-    return render(request, 'dashboard_manajer.html', context)
-
     username = request.session.get('username')
-    print("masuk")
-    print(username)
-
-    db_connection = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="123"
-        )
-    
-    cursor = db_connection.cursor()
-    cursor.execute("set search_path to ULeague")
+    context = {}
 
     # Untuk Informasi
-    print(username)
-    informasi = get_informasi(cursor, username)
-    status = get_status(cursor,informasi[0][0]) 
-    nama_tim = get_tim(cursor,informasi[0][0]) 
+    informasi = get_informasi(username) 
+    status = get_status(informasi[0]['id']) 
+    nama_tim = get_tim(informasi[0]['id']) 
 
-    db_connection.commit()
-    db_connection.close()  
+    tes = {}
+    for item in status:
+        for key, value in item.items():
+            if key in tes:
+                tes[key] += f", {value}"
+            else:
+                tes[key] = value
+    status = [tes]
 
-    nama = informasi[0][1] + " " + informasi[0][2]
-    email = informasi[0][4]
-    no_hp = informasi[0][3]
-    alamat = informasi[0][5]
+    merged_data = []
+    merged_data.extend(status)
+    merged_data.extend(nama_tim)
 
-    return render(request, 'dashboard_manajer.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'nama_tim':nama_tim})
+    merge_tup = []
+    for item in merged_data:
+        for key, value in item.items():
+            merge_tup.append((value))
+    
+    merge_tup = [tuple(merge_tup)]
+
+
+    tuple_data = []
+    for item in informasi:
+        nama_lengkap = item['nama_depan'] + ' ' + item['nama_belakang']
+        tuple_data.append(tuple([item['id'], nama_lengkap, item['nomor_hp'], item['email'], item['alamat']]))
+
+    
+    tuple_data = [tuple_data[0] + merge_tup[0]]
+    context['data'] = tuple_data
+
+    return render(request, 'dashboard_manajer.html', context=context)
 
 
 # Untuk mencari seluruh informasi user
-def get_informasi(cursor, username: str):
-
+def get_informasi(username: str):
+    
     # Mencari ID
-    query_get_ID = """select ID_Manajer from MANAJER 
-    where username = %s
-    """
-    cursor.execute(query_get_ID,(username,))
-    ID = cursor.fetchall()
-    ID = ID[0][0]
-    
+    get_id = query(f"""select ID_Manajer from MANAJER 
+    where username = '%s'
+    """ %(username))
+    print(get_id)
+    id_dict = get_id[0]
+
+
     # Mencari data berdasarkan ID
-    query_get_data = """select * from NON_PEMAIN 
-    where ID = %s
-    """
-    cursor.execute(query_get_data,(ID,))
-    result = cursor.fetchall()
+    get_data = query("""select * from NON_PEMAIN 
+    where ID = '%s'
+    """%(id_dict["id_manajer"]))
     
-    return result
+    return get_data
 
-def get_status(cursor, id: str):
-    query_get_status = """select status from STATUS_NON_PEMAIN 
-    where ID_Non_Pemain = %s
-    """
-    cursor.execute(query_get_status,(id,))
-    results = cursor.fetchall()
-    return results[0][0]
+def get_status(id: str):
+    get_status = query("""select status from STATUS_NON_PEMAIN 
+    where ID_Non_Pemain = '%s'
+    """ %(id))
+    
+    return get_status
 
-def get_tim(cursor, id: str):
-    query_get_status = """select Nama_Tim from TIM_MANAJER 
-    where ID_Manajer = %s
-    """
-    cursor.execute(query_get_status,(id,))
-    results = cursor.fetchall()
-    if len(results) == 0:
-        return "Belum membuat tim"
-    else:
-        return results[0][0]
+def get_tim(id: str):
+    get_tim = query("""select Nama_Tim from TIM_MANAJER 
+    where ID_Manajer = '%s'
+    """ %(id))
+
+    return get_tim
 
 #Bagian Mengelola Tim
 def registrasi_tim(request):
@@ -153,8 +153,6 @@ def make_captain(request, tim_id, pemain_id):
     
     return redirect('daftar_pemain', tim_id=tim_id)
 
-def dashboard_manajer(request):
-    return render(request, 'dashboard_manajer.html')
 
 ### UNTUK R List_Pertandingan
 # Menampilkan pertandingan-pertandingan timnya

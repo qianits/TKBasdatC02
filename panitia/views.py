@@ -8,135 +8,137 @@ from utils.query import *
 def dashboard_panitia(request):
     username = request.session.get('username')
 
-    db_connection = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="123"
-        )
-
-    cursor = db_connection.cursor()
-    cursor.execute("set search_path to ULeague")
+    context = {}
 
     # Untuk Informasi
-    informasi = get_informasi(cursor, username) 
-    status = get_status(cursor,informasi[0][0])   
-    info_rapat = get_rapat(cursor,[informasi[0][0]])
-    jabatan = get_jabatan(cursor, informasi[0][0])
+    informasi = get_informasi(username) 
+    status = get_status(informasi[0]['id'])   
+    info_rapat = get_rapat(informasi[0]['id'])
+    jabatan = get_jabatan(informasi[0]['id'])
+    print("jabatan")
+    jabatan_tup  = tuple(d['jabatan'] for d in jabatan)
+    print(jabatan_tup)
 
-    nama = informasi[0][1] + " " + informasi[0][2]
-    email = informasi[0][4]
-    no_hp = informasi[0][3]
-    alamat = informasi[0][5]
+
+    tes = {}
+    for item in status:
+        for key, value in item.items():
+            if key in tes:
+                tes[key] += f", {value}"
+            else:
+                tes[key] = value
+    status = [tes]
+
+    merged_data = []
+    merged_data.extend(status)
+
+    merge_tup = []
+    for item in merged_data:
+        for key, value in item.items():
+            merge_tup.append((value))
+    
+    merge_tup = [tuple(merge_tup)]
+    tuple_data = []
+    for item in informasi:
+        nama_lengkap = item['nama_depan'] + ' ' + item['nama_belakang']
+        tuple_data.append(tuple([item['id'], nama_lengkap, item['nomor_hp'], item['email'], item['alamat']]))
+
+    tuple_data = [tuple_data[0] + merge_tup[0]]
+    resultsss = [jabatan_tup + tuple_item for tuple_item in tuple_data]
+
+    context['data'] = resultsss
+    # [('74359555-b3d7-4c97-b70f-5843e3ca1f4b', 'Bastien Cansfield', '088984639510', 'bcansfield14@patch.com', '45 Florence Hill', 'Panitia, Tendik')]
     
 
     if info_rapat != None:
+        print("MASUK IF")
+        print(resultsss)
 
-        # print(info_rapat)
-        list_of_id_pertandingan = [x[0] for x in info_rapat]
-        list_of_datetime = [x[1] for x in info_rapat]
-        list_of_isi_rapat = [x[5] for x in info_rapat]
-
-        # print(list_of_id_pertandingan)
-        
+        list_of_id_pertandingan = [item['id_pertandingan'] for item in info_rapat]
+        list_of_datetime = [item['datetime'] for item in info_rapat]
+        list_of_isi_rapat = [item['isi_rapat'] for item in info_rapat]
     
-
-        temps_tim_1 = [x[3] for x in info_rapat]
+        # Manajer tim A
+        temps_tim_1 = [item['manajer_tim_a'] for item in info_rapat]
         list_of_tim_manajer_1 = []
         for id in temps_tim_1:
-            temp = get_list_of_tim_manajer(cursor,id)
+            temp = get_list_of_tim_manajer(id)
             list_of_tim_manajer_1.append(temp)
+        list_of_tim_manajer_1 = list_of_tim_manajer_1[0]
 
-        temps_tim_2 = [x[4] for x in info_rapat]
+        # Manajer tim B
+        temps_tim_2 = [item['manajer_tim_b'] for item in info_rapat]
         list_of_tim_manajer_2 = []
         for id in temps_tim_2:
-            temp = get_list_of_tim_manajer(cursor,id)
+            temp = get_list_of_tim_manajer(id)
             list_of_tim_manajer_2.append(temp)
-    
-        db_connection.commit()
-        db_connection.close()
+        list_of_tim_manajer_2 = list_of_tim_manajer_2[0]
 
-        tup1 = [(item,) for item in list_of_id_pertandingan]
-        tup2 = [(item,) for item in list_of_datetime]
-        tup3 = [(item,) for item in list_of_isi_rapat]
+        print("==============")
+        print(list_of_id_pertandingan)
+        print(list_of_datetime)
+        print(list_of_isi_rapat)
+        print(list_of_tim_manajer_1)
+        print(list_of_tim_manajer_2)
 
-        # print(tup1)
+        results = list(zip(list_of_id_pertandingan, list_of_datetime, list_of_isi_rapat, list_of_tim_manajer_1, list_of_tim_manajer_2))
+        context['data_rapat'] = results
+        print(results)
+        print(tuple_data)
 
-        data = list(zip(tup1, tup2, list_of_tim_manajer_1, list_of_tim_manajer_2, tup3))
-
-        return render(request, 'dashboard_panitia.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'jabatan':jabatan
-                                                         , 'list_of_id_pertandingan':list_of_id_pertandingan, 'data':data})
+        return render(request, 'dashboard_panitia.html',context=context)
 
     else:
-        db_connection.commit()
-        db_connection.close()
-        return render(request, 'dashboard_panitia.html',{'nama':nama, 'email':email, 'no_hp':no_hp, 'alamat':alamat, 'status':status, 'jabatan':jabatan})
+        return render(request, 'dashboard_panitia.html',context=context)
 
 
 # Untuk mencari seluruh informasi user
-def get_informasi(cursor, username: str):
-
+def get_informasi(username: str):
     # Mencari ID
-    query_get_ID = """select ID_panitia from PANITIA 
-    where username = %s
-    """
-    cursor.execute(query_get_ID,(username,))
-    ID = cursor.fetchall()
-    ID = ID[0][0]
+    get_id = query(f"""select ID_panitia from PANITIA 
+    where username = '%s'
+    """ %(username))
+    id_dict = get_id[0]
     
     # Mencari data berdasarkan ID
-    query_get_data = """select * from NON_PEMAIN 
-    where ID = %s
-    """
-    cursor.execute(query_get_data,(ID,))
-    result = cursor.fetchall()
-    
-    return result
+    get_data = query(f"""select * from NON_PEMAIN 
+    where ID = '%s'
+    """%(id_dict["id_panitia"]))
+    return get_data
 
-def get_status(cursor, id: str):
-    query_get_status = """select status from STATUS_NON_PEMAIN 
-    where ID_Non_Pemain = %s
-    """
-    cursor.execute(query_get_status,(id,))
-    results = cursor.fetchall()
-    return results[0][0]
+def get_status(id: str):
+    get_status = query(f"""select status from STATUS_NON_PEMAIN 
+    where ID_Non_Pemain = '%s'
+    """ %(id))
+    return get_status
 
-def get_jabatan(cursor, id: str):
-    query_get_jabatan = """select jabatan from PANITIA 
-    where ID_Panitia = %s
-    """
-    cursor.execute(query_get_jabatan,(id,))
-    results = cursor.fetchall()
-    return results[0][0]
+def get_jabatan(id: str):
+    get_jabatan = query(f"""select jabatan from PANITIA 
+    where ID_Panitia = '%s'
+    """ %(id))
+    return get_jabatan
 
-def get_rapat(cursor, id: str):
-    query_get_data_rapat = """select * from RAPAT 
-    where PERWAKILAN_PANITIA = %s
-    """
-    cursor.execute(query_get_data_rapat,(id[0],))
-    data_rapat = cursor.fetchall()
+def get_rapat(id: str):
+    get_data_rapat = query(f"""select * from RAPAT 
+    where PERWAKILAN_PANITIA = '%s'
+    """ %(id))
 
-    if len(data_rapat) == 0:
+    if len(get_data_rapat) == 0:
         return None
     
-    return data_rapat
+    return get_data_rapat
 
-def get_list_of_tim_manajer(cursor, id: str):
-    query_get_tim = """select Nama_Tim from TIM_MANAJER 
-    where ID_Manajer = %s
-    """
-    cursor.execute(query_get_tim,(id,))
-    tim = cursor.fetchall()
+def get_list_of_tim_manajer(id: str):
+    get_tim = query(f"""select Nama_Tim from TIM_MANAJER 
+    where ID_Manajer = '%s'
+    """ %(id))
 
-    query_get_manajer = """select Nama_Depan || ' ' || Nama_Belakang AS Nama_Lengkap from NON_PEMAIN 
-    where ID = %s
-    """
-    cursor.execute(query_get_manajer,(id,))
-    nama_manajer = cursor.fetchall()
+    get_manajer = query(f"""select Nama_Depan || ' ' || Nama_Belakang AS Nama_Lengkap from NON_PEMAIN 
+    where ID = '%s'
+    """ %(id))
 
-    tim_manajer = (tim[0][0], nama_manajer[0][0])
-    
-    return tim_manajer
+    result = [(list(d1.values())[0], list(d2.values())[0]) for d1, d2 in zip(get_tim, get_manajer)]
+    return result
 
 def query(query_str: str):
     hasil = []
